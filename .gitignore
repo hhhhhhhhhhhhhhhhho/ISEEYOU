@@ -1,6 +1,9 @@
-.DS_Store
+g.DS_Store
 
 
 ./DS_Store
 
-.ipynp_checkpoints/
+.ipynb_checkpoints
+./Audio/.ipynb_checkpoints/
+
+./Audio/KsponSpeech_01
