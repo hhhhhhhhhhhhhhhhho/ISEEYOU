@@ -6,6 +6,4 @@ g.DS_Store
 .ipynb_checkpoints
 ./Audio/.ipynb_checkpoints/
 
-./Audio/KsponSpeech_01/
 
-./Audio/audio_data/
