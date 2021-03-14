@@ -6,4 +6,4 @@ g.DS_Store
 .ipynb_checkpoints
 ./Audio/.ipynb_checkpoints/
 
-
+./Audio/audio_data/
