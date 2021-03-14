@@ -7,3 +7,5 @@ g.DS_Store
 ./Audio/.ipynb_checkpoints/
 
 ./Audio/KsponSpeech_01/
+
+./Audio/audio_data/
