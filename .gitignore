@@ -3,7 +3,6 @@ g.DS_Store
 
 *.DS_Store
 
-.ipynb_checkpoints
-./Audio/.ipynb_checkpoints/
+./Audio/audio_korean/.ipynb_checkpoints/
 
 ./Audio/audio_korean/audio_data/
