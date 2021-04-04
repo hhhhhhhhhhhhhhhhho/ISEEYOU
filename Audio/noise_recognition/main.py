@@ -1,12 +1,5 @@
 from __future__ import division, print_function
 import recording_voice as rv
-import sys
-
-import numpy as np
-import resampy
-import soundfile as sf
-import tensorflow as tf
-from models.research.audioset.yamnet import yamnet
 from models.research.audioset.yamnet import inference as ym
 import db_connection as db
 import threading as thd
