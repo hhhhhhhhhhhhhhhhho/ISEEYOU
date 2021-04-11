@@ -1,10 +1,9 @@
 from PyQt5 import QtWidgets
 import sys
-import subwindows
 
 class Select(QtWidgets.QDialog):
-    def __init__(self, parent=None):
-        super(Select, self).__init__(parent)
+    def __init__(self):
+        super().__init__()
 
         self.name = ''
 
@@ -27,25 +26,10 @@ class Select(QtWidgets.QDialog):
     def handleSelect(self):
         self.accept()
 
-class Window(QtWidgets.QMainWindow):
-    def __init__(self, parent=None):
-        super(Window, self).__init__(parent)
-        self.showFullScreen()
-        # self.ui = Ui_MainWindow()
-        # self.ui.setupUi(self)
-
 
 if __name__ == '__main__':
 
     app = QtWidgets.QApplication(sys.argv)
-    login = subwindows.Login()
-
-    if login.exec_() == QtWidgets.QDialog.Accepted:
-        window = Window()
-        window.show()
-    #else:
-        # 로그인 실패했을때 띄울 창
-
-
+    select = Select()
+    select.show()
     sys.exit(app.exec_())
-
