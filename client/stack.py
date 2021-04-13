@@ -66,8 +66,8 @@ class stackedExample(QWidget):
         self.stack3.setLayout(layout)
 
 
-    def display(self, i):
-        self.Stack.setCurrentIndex(i)
+    #def display(self, i):
+        #self.Stack.setCurrentIndex(i)
 
     def change_widget(self):
         self.Stack.setCurrentWidget(self.stack2)
