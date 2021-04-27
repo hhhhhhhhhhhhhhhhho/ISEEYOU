@@ -1,5 +1,8 @@
 import cv2
 import GazePointGUI
+import threading
+import eyetracking_module
+from time import sleep
 
 vpos = 0
 hpos = 0
@@ -38,10 +41,23 @@ def bitOperation():
         cv2.putText(student, str, (40, 50), cv2.FONT_HERSHEY_COMPLEX, 0.9, (255, 255, 255), 2)
         cv2.imshow('positioning', student)
         cv2.moveWindow('positioning', x, y)
-
         if cv2.waitKey(1) == 13:
             GazePointGUI.GazePointGUI()
             break
 
     cv2.destroyAllWindows()
+# def thread_point_eye(i):
+#     if i==1:
+#         eyetracking_module.eyetracking()
+#     else:
+#         bitOperation()
+#
+# t1 = threading.Thread(target=thread_point_eye, args=(0,))
+# t2 = threading.Thread(target=thread_point_eye, args=(1,))
+#
+# t1.start()
+# t2.start()
+# t1.join()
+# t2.join()
 bitOperation()
+
