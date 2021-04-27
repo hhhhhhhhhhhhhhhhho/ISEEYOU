@@ -10,6 +10,8 @@ except:
     os.chdir(os.getcwd())
 
 def eyetracking(p1,p2,p3,p4):
+    x_score = max(abs(p1[0]),abs(p2[0]),abs(p3[0]),abs(p4[0]))
+    y_score = max(abs(p1[1]),abs(p2[1]),abs(p3[1]),abs(p4[1]))
     sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
@@ -104,7 +106,7 @@ def eyetracking(p1,p2,p3,p4):
                 testxx = np.delete(testxx, 0)
             if (len(testyy) >= 4):
                 testyy = np.delete(testyy, 0)
-            if abs(testxx.mean() - 1) > 4 or abs(testyy.mean() - 1) > 1.5:
+            if abs(testxx.mean() - 1) > x_score+0.5 or abs(testyy.mean() - 1) > y_score+0.5:
 
                 cnt = cnt + 1
                 if (cnt == 10):
