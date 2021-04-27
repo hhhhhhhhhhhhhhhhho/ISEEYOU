@@ -79,14 +79,13 @@ def eyetracking(p1,p2,p3,p4):
                 right_eye_cord_int = tuple(map(int, right_eye_cord))
                 memory_cord_right.pop()
                 memory_cord_right.append(add_tuple(right_lefttop, right_eye_cord_int))
-
             if (memory_cord[-1][0] < left_min_x or memory_cord[-1][0] > left_max_x or memory_cord[-1][1] < left_min_y or
                     memory_cord[-1][1] > left_max_y):
                 memory_cord[-1] = left_center
             if (memory_cord_right[-1][0] < right_min_x or memory_cord_right[-1][0] > right_max_x or
                     memory_cord_right[-1][1] < right_min_y or
                     memory_cord_right[-1][1] > right_max_y):
-                memory_cord[-1] = left_center
+                memory_cord_right[-1] = right_center
             cv2.circle(img=frame, center=memory_cord[-1], radius=2, color=(0, 0, 255), thickness=-1)
             cv2.circle(img=frame, center=memory_cord_right[-1], radius=2, color=(0, 0, 255), thickness=-1)
 
@@ -106,7 +105,7 @@ def eyetracking(p1,p2,p3,p4):
                 testxx = np.delete(testxx, 0)
             if (len(testyy) >= 4):
                 testyy = np.delete(testyy, 0)
-            if abs(testxx.mean() - 1) > x_score+0.5 or abs(testyy.mean() - 1) > y_score+0.5:
+            if abs(testxx.mean() - 1) > x_score or abs(testyy.mean() - 1) > y_score:
 
                 cnt = cnt + 1
                 if (cnt == 10):
