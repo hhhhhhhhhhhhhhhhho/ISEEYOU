@@ -209,4 +209,4 @@ def GazePointGUI():
 
     # Be IDLE friendly
     pygame.quit()
-    #return point1, point2, point3, point4
+    return point1, point2, point3, point4

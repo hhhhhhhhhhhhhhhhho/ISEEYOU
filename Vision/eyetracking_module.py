@@ -9,7 +9,7 @@ try:
 except:
     os.chdir(os.getcwd())
 
-def eyetracking():
+def eyetracking(p1,p2,p3,p4):
     sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")

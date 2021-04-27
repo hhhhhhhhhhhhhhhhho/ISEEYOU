@@ -42,22 +42,13 @@ def bitOperation():
         cv2.imshow('positioning', student)
         cv2.moveWindow('positioning', x, y)
         if cv2.waitKey(1) == 13:
-            GazePointGUI.GazePointGUI()
+            p1,p2,p3,p4=GazePointGUI.GazePointGUI()
+            cv2.destroyAllWindows()
+            return p1,p2,p3,p4
             break
 
     cv2.destroyAllWindows()
-# def thread_point_eye(i):
-#     if i==1:
-#         eyetracking_module.eyetracking()
-#     else:
-#         bitOperation()
-#
-# t1 = threading.Thread(target=thread_point_eye, args=(0,))
-# t2 = threading.Thread(target=thread_point_eye, args=(1,))
-#
-# t1.start()
-# t2.start()
-# t1.join()
-# t2.join()
-bitOperation()
+p1,p2,p3,p4=bitOperation()
+eyetracking_module.eyetracking(p1,p2,p3,p4)
+
 
