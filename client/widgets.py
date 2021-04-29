@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import *
-from DBconnection import load_studentdata, load_student_sublist
-import webviewer
+from client.DBconnection import load_studentdata, load_student_sublist
+import client.webviewer
+from datetime import datetime
 
 
 class MainWidget(QWidget):
@@ -32,22 +33,27 @@ class MainWidget(QWidget):
 
         #student_img = load_studentdata(self.student_id)
         self.sublist = load_student_sublist(self.student_id)
-        print(self.sublist)
+        if self.sublist:
+            print(self.sublist)
+            test_select_dial = SelectTest(self.sublist)
 
-        test_select_dial = SelectTest(self.sublist)
-        if test_select_dial.exec_():
-            self.change_to_exam_page(test_select_dial.test_index)
+            if test_select_dial.exec():
+                self.change_to_exam_page(test_select_dial.test_index)
+            else:
+                print('reject')
         else:
-            print('reject')
+            print('empty')
+            LoginFaultDialog()
+
 
     def change_to_exam_page(self, test_index):
         print('access', test_index)
         self.exam_page.set_ui(self.sublist[test_index])
-        self.exam_page.btn_start.clicked.connect(self.exam_start)
+        #self.exam_page.btn_start.clicked.connect(self.exam_start)
         self.stack.setCurrentWidget(self.exam_page)
 
     def exam_start(self):
-        webviewer.ExamProcess()
+        client.webviewer.ExamProcess()
 
 
 class ExamPageWidget(QWidget):
@@ -122,13 +128,16 @@ class Login(QGroupBox):
 class SelectTest(QDialog):
     def __init__(self, sublist):
         super().__init__()
-        #self.test_list = ['운영체제', '알고리즘', '데이터베이스', '자료구조']
         self.sublist = sublist
         self.test_index = -1
         self.init_ui()
 
     def init_ui(self):
-        self.label_date = QLabel('Date: xxxx/xx/xx', self)
+        year = datetime.today().year
+        month = datetime.today().month
+        day = datetime.today().day
+
+        self.label_date = QLabel('%d/%d/%d' %(year, month, day), self)
 
         self.cb = QComboBox(self)
         for sub in self.sublist:
@@ -139,7 +148,7 @@ class SelectTest(QDialog):
         self.btn_ok.clicked.connect(self.ok_clicked)
 
         self.btn_cancle = QPushButton('Cancle')
-        self.btn_cancle.clicked.connect(self.reject)
+        self.btn_cancle.clicked.connect(self.cancel_clicked)
 
         self.hbox_btn = QHBoxLayout()
         self.hbox_btn.addWidget(self.btn_ok)
@@ -155,3 +164,13 @@ class SelectTest(QDialog):
     def ok_clicked(self):
         self.test_index = self.cb.currentIndex()
         self.accept()
+
+    def cancel_clicked(self):
+        self.reject()
+
+class LoginFaultDialog(QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setText('틀린 로그인정보: 학번을 다시 입력하세요.')
+        self.setWindowTitle('로그인 실패')
+        self.exec()

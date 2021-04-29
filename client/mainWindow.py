@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import *
-import widgets
+import client.widgets
 import sys
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = widgets.MainWidget()
+    ex = client.widgets.MainWidget()
     sys.exit(app.exec_())
