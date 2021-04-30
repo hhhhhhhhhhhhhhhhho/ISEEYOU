@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
-from client.DBconnection import load_studentdata, load_student_sublist
-import client.webviewer
+from Application.DBconnection import load_studentdata, load_student_sublist
+import Application.webviewer
 from datetime import datetime
 
 
