@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import *
 from Application.DBconnection import load_studentdata, load_student_sublist
 import Application.webviewer
 from datetime import datetime
+from PyQt5.QtGui import *
 
 
 class MainWidget(QWidget):
@@ -20,7 +21,12 @@ class MainWidget(QWidget):
         hbox.addWidget(self.stack)
 
         self.setLayout(hbox)
-
+        self.setWindowTitle('ISeeYou')
+        self.setWindowIcon(QIcon('icon.png'))
+        pal = QPalette()
+        pal.setColor(QPalette.Background,QColor(255,255,255))
+        self.setAutoFillBackground(True)
+        self.setPalette(pal)
         self.setGeometry(0, 0, 800, 800)
         self.show()
 
@@ -77,11 +83,12 @@ class FirstPageWidget(QWidget):
         self.init_ui()
 
     def init_ui(self):
+
         grid = QGridLayout()
         grid.addWidget(self.login, 0, 0)
-        grid.addWidget(QLabel('아마 공백'), 1, 0)
-        grid.addWidget(QLabel('세종대 사진'), 0, 1)
-        grid.addWidget(QLabel('I SEE YOU'), 1, 1)
+        # grid.addWidget(QLabel('아마 공백'), 1, 0)
+        # grid.addWidget(QLabel('세종대 사진'), 0, 1)
+        # grid.addWidget(QLabel('I SEE YOU'), 1, 1)
 
         self.setLayout(grid)
 
@@ -100,7 +107,7 @@ class Login(QGroupBox):
         self.label_id = QLabel('학번', self)
         self.id_input = QLineEdit()
 
-        self.btn_login = QPushButton('log-in', self)
+        self.btn_login = QPushButton('Sign in', self)
 
         hbox_id = QHBoxLayout()
         hbox_id.addWidget(self.label_id)
