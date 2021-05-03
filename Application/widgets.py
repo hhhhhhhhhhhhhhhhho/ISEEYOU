@@ -2,7 +2,7 @@ from Application.DBconnection import load_studentdata, load_student_sublist
 import Application.webviewer
 from datetime import datetime
 from PyQt5 import QtCore, QtWidgets, QtGui
-
+import res
 
 class MainWidget(QtWidgets.QWidget):
     test_index = -1
