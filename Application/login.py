@@ -68,7 +68,7 @@ class Ui_Form(object):
         self.pushButton.setGeometry(QtCore.QRect(360, 400, 221, 41))
         self.pushButton.setStyleSheet("")
         self.pushButton.setObjectName("pushButton")
-        #self.pushButton.clicked.connect(self.btn_clicked())
+        self.pushButton.clicked.connect(self.btn_clicked)
         self.label_4 = QtWidgets.QLabel(Form)
         self.label_4.setGeometry(QtCore.QRect(90, 270, 131, 41))
         font = QtGui.QFont()
@@ -115,7 +115,7 @@ class Ui_Form(object):
 
 if __name__ == "__main__":
     import sys
-    app = QtWidgets.QApplication(sys.argv)
+    '''app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
     Dialog = QtWidgets.QDialog()
     ui = Ui_Form()
@@ -124,3 +124,19 @@ if __name__ == "__main__":
     ui1.setupUi(Dialog)
     Form.show()
     sys.exit(app.exec_())
+'''
+    app = QtWidgets.QApplication(sys.argv)
+
+    login_box = QtWidgets.QWidget()
+    login_box_ui = Ui_Form()
+    login_box_ui.setupUi(login_box)
+
+    select_dialog = QtWidgets.QDialog()
+    select_dialog_ui = dialog.Ui_Dialog()
+    select_dialog_ui.setupUi(select_dialog)
+
+    login_box.show()
+
+
+    sys.exit(app.exec_())
+
