@@ -7,6 +7,7 @@ Audio/audio_korean/.ipynb_checkpoints/
 Audio/audio_korean/audio_data/
 Database/DBconnection.py
 .idea/
+Application/__pycache__/
 
 */.ipynb_checkpoints/
 */audio_data/
