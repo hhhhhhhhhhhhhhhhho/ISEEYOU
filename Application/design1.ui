@@ -56,10 +56,8 @@ border-radius:10px;</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color:rgba(0,0,0,0);
-border:2px solid rgba(0,0,0,0);
+    <string notr="true">border:2px solid rgba(0,0,0,0);
 border-bottom-color:rgba(46,82,101,200);
-color:rgb(0,0,0);
 padding-bottim:7px;</string>
    </property>
    <item>

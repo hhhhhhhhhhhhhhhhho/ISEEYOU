@@ -10,6 +10,10 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import res,sys
+import dialog
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import pyqtSlot
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -64,6 +68,7 @@ class Ui_Form(object):
         self.pushButton.setGeometry(QtCore.QRect(360, 400, 221, 41))
         self.pushButton.setStyleSheet("")
         self.pushButton.setObjectName("pushButton")
+        #self.pushButton.clicked.connect(self.btn_clicked())
         self.label_4 = QtWidgets.QLabel(Form)
         self.label_4.setGeometry(QtCore.QRect(90, 270, 131, 41))
         font = QtGui.QFont()
@@ -87,6 +92,10 @@ class Ui_Form(object):
         self.label_6.setGeometry(QtCore.QRect(500, 510, 101, 41))
         self.label_6.setObjectName("label_6")
 
+        self.label.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25,xOffset=0,yOffset=0))
+        self.label_2.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25,xOffset=0,yOffset=0))
+        self.pushButton.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25,xOffset=0,yOffset=3))
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -95,18 +104,23 @@ class Ui_Form(object):
         Form.setWindowTitle(_translate("Form", "Form"))
         self.label_3.setText(_translate("Form", "Log In"))
         self.lineEdit.setPlaceholderText(_translate("Form", "학번"))
-        self.pushButton.setText(_translate("Form", "Log In"))
+        self.pushButton.setText(_translate("Form", "로그인"))
         self.label_4.setText(_translate("Form", "ISeeYou"))
         self.label_5.setText(_translate("Form", "비대면 시험 부정행위 방지 프로그램"))
         self.label_6.setText(_translate("Form", "<html><head/><body><p><img src=\":/image/세종.jpg\"/></p></body></html>"))
 
+    def btn_clicked(self):
+        print(123)
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
+    Dialog = QtWidgets.QDialog()
     ui = Ui_Form()
+    ui1 = dialog.Ui_Dialog()
     ui.setupUi(Form)
+    ui1.setupUi(Dialog)
     Form.show()
     sys.exit(app.exec_())
