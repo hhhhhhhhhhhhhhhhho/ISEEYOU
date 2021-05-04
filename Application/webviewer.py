@@ -3,7 +3,7 @@ import threading
 import webview
 from time import sleep
 
-class ExamProcess:
+class ExamProcess():
 
     window_title = 'Exam Screen'
     def __init__(self):
@@ -31,19 +31,21 @@ class ExamProcess:
         window_thread.start()
 
     def check_window(self):
+        global prev
+        prev = ''
         while(True):
             lib = ctypes.windll.LoadLibrary('user32.dll')
 
             handle = lib.GetForegroundWindow()  # 활성화된 윈도우의 핸들얻음
             buffer = ctypes.create_unicode_buffer(255)  # 타이틀을 저장할 버퍼
             lib.GetWindowTextW(handle, buffer, ctypes.sizeof(buffer))  # 버퍼에 타이틀 저장
-            print(buffer.value)
 
-            if self.window.value != buffer.value:
+            if buffer.value!='' and buffer.value!= prev and self.window.value != buffer.value:
+                prev = buffer.value
+                print(buffer.value)
                 print("부정행위")
 
-
-
-
+#
+#
 if __name__ == '__main__':
     process = ExamProcess()
