@@ -53,7 +53,7 @@ class MainWidget(QWidget):
         self.stack.setCurrentWidget(self.exam_page)
 
     def exam_start(self):
-        client.webviewer.ExamProcess()
+        Application.webviewer.ExamProcess()
 
 
 class ExamPageWidget(QWidget):
