@@ -6,11 +6,9 @@ student_name="김찬규"
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 video_capture = cv2.VideoCapture('id.mp4')
 
-kim_image = face_recognition.load_image_file("kim.jpg")
 
 #std_image = db사진이랑 연결
 
-known_face_encodings = [face_recognition.face_encodings(kim_image)[0]]
 facecheck=0
 # Initialize some variables
 face_locations = []
