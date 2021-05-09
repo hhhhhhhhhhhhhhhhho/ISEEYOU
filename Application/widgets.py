@@ -12,7 +12,6 @@ class MainWidget(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
-        self.sublist = []
 
         self.login = Login()
         self.login.pushButton.clicked.connect(self.btn_login_clicked)
@@ -80,18 +79,18 @@ class MainWidget(QtWidgets.QWidget):
         self.btn_start_test.setStyleSheet("")
         self.btn_start_test.setObjectName("pushButton")
 
-        self.lbl_stdname_info = QtWidgets.QLabel(self)
-        self.lbl_stdname_info.setGeometry(QtCore.QRect(110, 160, 61, 31))
+        self.lbl_stdname = QtWidgets.QLabel(self)
+        self.lbl_stdname.setGeometry(QtCore.QRect(110, 160, 250, 31))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(11)
         font.setBold(True)
         font.setWeight(75)
-        self.lbl_stdname_info.setFont(font)
-        self.lbl_stdname_info.setObjectName("label_stdname_info")
+        self.lbl_stdname.setFont(font)
+        self.lbl_stdname.setObjectName("label_stdname")
 
         self.lbl_examtime_info = QtWidgets.QLabel(self)
-        self.lbl_examtime_info.setGeometry(QtCore.QRect(110, 190, 71, 31))
+        self.lbl_examtime_info.setGeometry(QtCore.QRect(110, 190, 250, 31))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(11)
@@ -111,32 +110,13 @@ class MainWidget(QtWidgets.QWidget):
         self.btn_exit = QtWidgets.QPushButton(self)
         self.btn_exit.setGeometry(QtCore.QRect(550, 80, 41, 31))
         font = QtGui.QFont()
-        font.setFamily("Agency FB")
+        font.setFamily("맑은 고딕")
         font.setPointSize(12)
         self.btn_exit.setFont(font)
         self.btn_exit.setObjectName("pushbutton_exit")
 
-        self.lbl_start_end_time = QtWidgets.QLabel(self)
-        self.lbl_start_end_time.setGeometry(QtCore.QRect(190, 190, 111, 31))
-        font = QtGui.QFont()
-        font.setFamily("맑은 고딕")
-        font.setPointSize(11)
-        font.setBold(True)
-        font.setWeight(75)
-        self.lbl_start_end_time.setFont(font)
-        self.lbl_start_end_time.setObjectName("label_start_end_time")
-
-        self.lbl_stdname = QtWidgets.QLabel(self)
-        self.lbl_stdname.setGeometry(QtCore.QRect(170, 160, 51, 31))
-        font = QtGui.QFont()
-        font.setFamily("맑은 고딕")
-        font.setPointSize(11)
-        font.setBold(True)
-        font.setWeight(75)
-        self.lbl_stdname.setFont(font)
-        self.lbl_stdname.setObjectName("label_stdname")
-
         self.btn_facecheck = QtWidgets.QPushButton(self)
+        self.btn_facecheck.clicked.connect(self.start_face_check)
         self.btn_facecheck.setGeometry(QtCore.QRect(110, 230, 75, 23))
         self.btn_facecheck.setObjectName("pushButton_facecheck")
 
@@ -145,10 +125,12 @@ class MainWidget(QtWidgets.QWidget):
         self.btn_idcardcheck.setObjectName("pushButton_idcardcheck")
 
         self.lbl_facecheck_ok = QtWidgets.QLabel(self)
+        self.lbl_facecheck_ok.hide()
         self.lbl_facecheck_ok.setGeometry(QtCore.QRect(80, 230, 16, 21))
         self.lbl_facecheck_ok.setObjectName("label_facecheck_ok")
 
         self.lbl_idcardcheck_ok = QtWidgets.QLabel(self)
+        self.lbl_idcardcheck_ok.hide()
         self.lbl_idcardcheck_ok.setGeometry(QtCore.QRect(80, 260, 16, 21))
         self.lbl_idcardcheck_ok.setObjectName("label_idcardcheck_ok")
 
@@ -157,6 +139,7 @@ class MainWidget(QtWidgets.QWidget):
         self.btn_monitor_setting.setObjectName("pushButton_monitor_setting")
 
         self.lbl_monitor_setting_ok = QtWidgets.QLabel(self)
+        self.lbl_monitor_setting_ok.hide()
         self.lbl_monitor_setting_ok.setGeometry(QtCore.QRect(80, 290, 16, 21))
         self.lbl_monitor_setting_ok.setObjectName("label_monitor_setting_ok")
 
@@ -171,13 +154,13 @@ class MainWidget(QtWidgets.QWidget):
         self.setWindowTitle(_translate("Form", "Form"))
         self.lbl_subname.setText(_translate("Form", self.sublist[MainWidget.test_index][1]))
         self.btn_start_test.setText(_translate("Form", "시험시작"))
-        self.lbl_stdname_info.setText(_translate("Form", "응시자 : "))
-        self.lbl_examtime_info.setText(_translate("Form", "시험시간 :"))
+        self.lbl_stdname.setText(_translate("Form", f"응시자 : {self.student_data[0]}"))
+
+        sub = self.sublist[MainWidget.test_index]
+        self.lbl_examtime_info.setText(_translate("Form", f"시험 시간: {sub[2].hour}:{sub[2].minute} ~ {sub[3].hour}:{sub[3].minute}"))
         self.lbl_stdinfo_icon.setText(_translate("Form", "<html><head/><body><p><img src=\":/student/driving-license.png\"/></p></body></html>"))
         self.lbl_clock_icon.setText(_translate("Form", "<html><head/><body><p><img src=\":/student/clock.png\"/></p></body></html>"))
         self.btn_exit.setText(_translate("Form", "X"))
-        self.lbl_start_end_time.setText(_translate("Form", "12:00 - 13:30"))
-        self.lbl_stdname.setText(_translate("Form", "김찬규"))
         self.btn_facecheck.setText(_translate("Form", "얼굴인식"))
         self.btn_idcardcheck.setText(_translate("Form", "신분증인식"))
         self.lbl_facecheck_ok.setText(_translate("Form", "<html><head/><body><p><img src=\":/all/check.png\"/></p></body></html>"))
@@ -194,8 +177,9 @@ class MainWidget(QtWidgets.QWidget):
         student_id = self.login.id_input.text()
         print(student_id, '로그인 시도..')
 
-        # student_img = load_studentdata(self.student_id)
-        self.sublist += load_student_sublist(student_id)
+        self.student_data = load_studentdata(student_id)
+        print(self.student_data)
+        self.sublist = load_student_sublist(student_id)
 
         if self.sublist:
             print('로그인 성공')
@@ -216,7 +200,9 @@ class MainWidget(QtWidgets.QWidget):
     def start_face_check(self):
         kim_image = face_recognition.load_image_file('kim.jpg')
         if face_check.face_check(kim_image):
-            self.btn_start_test.setEnabled(True)
+            self.lbl_facecheck_ok.show()
+            self.btn_facecheck.setEnabled(False)
+            #self.btn_start_test.setEnabled(True)
 
     def exam_start(self):
         Application.webviewer.ExamProcess()
@@ -263,10 +249,10 @@ class Login(QtWidgets.QWidget):
         self.label_2.setObjectName("label_2")
 
         self.label_Login = QtWidgets.QLabel(self)
-        self.label_Login.setGeometry(QtCore.QRect(360, 260, 100, 41))
+        self.label_Login.setGeometry(QtCore.QRect(360, 260, 120, 50))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
-        font.setPointSize(22)
+        font.setPointSize(20)
         font.setBold(True)
         font.setWeight(75)
         self.label_Login.setFont(font)
@@ -287,10 +273,10 @@ class Login(QtWidgets.QWidget):
         self.pushButton.setObjectName("pushButton")
 
         self.label_ISeeYou = QtWidgets.QLabel(self)
-        self.label_ISeeYou.setGeometry(QtCore.QRect(90, 270, 131, 41))
+        self.label_ISeeYou.setGeometry(QtCore.QRect(70, 270, 250, 41))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
-        font.setPointSize(22)
+        font.setPointSize(20)
         font.setBold(True)
         font.setWeight(75)
         self.label_ISeeYou.setFont(font)
@@ -298,7 +284,7 @@ class Login(QtWidgets.QWidget):
         self.label_ISeeYou.setObjectName("label_ISeeYou")
 
         self.label_subtitle = QtWidgets.QLabel(self)
-        self.label_subtitle.setGeometry(QtCore.QRect(90, 300, 211, 51))
+        self.label_subtitle.setGeometry(QtCore.QRect(70, 300, 250, 51))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setBold(True)
@@ -357,7 +343,11 @@ class SelectTest(QtWidgets.QDialog):
                              "}\n"
                              "QPushButton#pushButton:hover{\n"
                              "    background-color:rgba(255,200,0,1);\n"
-                             "}")
+                             "}\n"
+                           "QComboBox::drop-down{\n"
+                           "    border : 0px;\n"
+                           "}\n"
+                           )
 
         self.label_main = QtWidgets.QLabel(self)
         self.label_main.setGeometry(QtCore.QRect(10, 20, 382, 260))
@@ -367,19 +357,30 @@ class SelectTest(QtWidgets.QDialog):
         self.label_main.setObjectName("label_main")
 
         self.comboBox = QtWidgets.QComboBox(self)
-        self.comboBox.setGeometry(QtCore.QRect(80, 130, 251, 31))
-        self.comboBox.setStyleSheet("background-color:rgba(250,250,250,255);\n"
-                                    "border:2px solid rgba(0,0,0,0);\n"
-                                    "border-bottom-color:rgba(46,82,101,200);\n"
-                                    "padding-bottim:7px;")
+        self.comboBox.setGeometry(QtCore.QRect(80, 130, 251, 40))
+        self.comboBox.setStyleSheet("font-size: 1rem;\n"
+                                    "  font-weight: 400;\n"
+                                    "  line-height: 1.5;\n"
+                                    "\n"
+                                    "  color: #444;\n"
+                                    "  background-color: #fff;\n"
+                                    "\n"
+                                    "  padding: 0.6em 1.4em 0.5em 0.8em;\n"
+                                    "  margin: 0;\n"
+                                    "\n"
+                                    "  border: 1px solid #aaa;\n"
+                                    "  border-radius: 0.5em;\n"
+                                    "  box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);\n"
+                                    "appearance:none;\n"
+                                    "-webkit-appearance:none;")
         self.comboBox.setObjectName("comboBox")
 
         self.label_title = QtWidgets.QLabel(self)
         self.label_title.setGeometry(QtCore.QRect(160, 30, 91, 41))
 
         font = QtGui.QFont()
-        font.setFamily("에스코어 드림 7 ExtraBold")
-        font.setPointSize(16)
+        font.setFamily("맑은 고딕")
+        font.setPointSize(15)
         font.setBold(True)
         font.setWeight(75)
 
