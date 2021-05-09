@@ -126,6 +126,10 @@ class Ui_Form(object):
         self.label_10.setGeometry(QtCore.QRect(80, 260, 16, 21))
         self.label_10.setObjectName("label_10")
 
+
+        self.label.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25,xOffset=0,yOffset=0))
+        self.pushButton.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25,xOffset=0,yOffset=3))
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -145,6 +149,7 @@ class Ui_Form(object):
         self.pushButton_4.setText(_translate("Form", "신분증인식"))
         self.label_2.setText(_translate("Form", "<html><head/><body><p><img src=\":/all/check.png\"/></p></body></html>"))
         self.label_10.setText(_translate("Form", "<html><head/><body><p><img src=\":/all/check.png\"/></p></body></html>"))
+
 
 
 if __name__ == "__main__":
