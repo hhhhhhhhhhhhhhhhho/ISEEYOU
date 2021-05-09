@@ -3,6 +3,8 @@ import Application.webviewer
 from datetime import datetime
 from PyQt5 import QtCore, QtWidgets, QtGui
 import res
+from Vision import face_check
+import face_recognition
 
 class MainWidget(QtWidgets.QWidget):
     test_index = -1
@@ -11,8 +13,13 @@ class MainWidget(QtWidgets.QWidget):
         super().__init__()
         self.sublist = []
         self.lbl_test = QtWidgets.QLabel(self)
+
+        self.btn_face_recog = QtWidgets.QPushButton('얼굴 인식')
+        self.btn_face_recog.clicked.connect(self.start_face_check)
+
         self.btn_start = QtWidgets.QPushButton('start')
         self.btn_start.clicked.connect(self.exam_start)
+        self.btn_start.setEnabled(False)
 
         self.login = Login()
         self.login.pushButton.clicked.connect(self.btn_login_clicked)
@@ -23,6 +30,7 @@ class MainWidget(QtWidgets.QWidget):
         self.lbl_test.setText(self.sublist[MainWidget.test_index][1])
         box = QtWidgets.QHBoxLayout()
         box.addWidget(self.lbl_test)
+        box.addWidget(self.btn_face_recog)
         box.addWidget(self.btn_start)
         self.setLayout(box)
         self.setGeometry(0, 0, 800, 800)
@@ -53,6 +61,11 @@ class MainWidget(QtWidgets.QWidget):
         else:
             print('로그인 실패.. 다시 시도바람')
             LoginFaultMessage()
+
+    def start_face_check(self):
+        kim_image = face_recognition.load_image_file('kim.jpg')
+        if face_check.face_check(kim_image):
+            self.btn_start.setEnabled(True)
 
     def exam_start(self):
         Application.webviewer.ExamProcess()

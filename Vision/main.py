@@ -5,7 +5,7 @@ import dlib
 import datetime
 
 video_capture = cv2.VideoCapture(0)
-kim_image = face_recognition.load_image_file("kim.jpg")
+kim_image = face_recognition.load_image_file("../Application/kim.jpg")
 
 #std_image = db사진이랑 연결
 

@@ -5,6 +5,8 @@ import dlib
 import datetime
 
 def face_check(img):
+    MAX_SCD = 300
+    cur_scd = 0
     video_capture = cv2.VideoCapture(0)
     student_img = img
     student_face_encoding = face_recognition.face_encodings(student_img)[0]
@@ -55,6 +57,7 @@ def face_check(img):
                 face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
                 best_match_index = np.argmin(face_distances)
                 if matches[best_match_index]:
+                    cur_scd = 0
                     count += 13
                     known_face_names = [str(count) + "%"]
                     name = known_face_names[best_match_index]
@@ -85,12 +88,19 @@ def face_check(img):
                 print("cheating")  # 치팅코드3
         # Display the resulting image
         cv2.imshow('Video', frame)
+        cur_scd+=1
         if (count >= 100):
-            break
+            video_capture.release()
+            cv2.destroyAllWindows()
+            return True
         # Hit 'q' on the keyboard to quit!
+        if cur_scd >= MAX_SCD:
+            video_capture.release()
+            cv2.destroyAllWindows()
+            return False
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-    video_capture.release()
-    cv2.destroyAllWindows()
-kim_image = face_recognition.load_image_file("kim.jpg")
-face_check(kim_image)
+
+
+kim_image = face_recognition.load_image_file("../Application/kim.jpg")
+#face_check(kim_image)
