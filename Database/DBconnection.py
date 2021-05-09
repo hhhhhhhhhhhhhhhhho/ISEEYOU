@@ -5,10 +5,7 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 from datetime import datetime
 import cv2
-import AccessKey as Key
-
-aws_access_key_id = Key.ACCESS_KEY
-aws_secret_access_key = Key.SECRET_KEY
+from Database import AccessKey as Key
 
 # mysql 연결
 conn = pymysql.connect(
@@ -28,10 +25,12 @@ curs = conn.cursor()
 
 #1. 학번으로 학생사진 가져오기
 def load_studentdata(student_id):
-    sql = "select S.name, I.file from IMAGE I inner join STUDENT S on S.id = I.student_id where student_id = %s"
+    sql = "select S.name, I.file from IMAGE I inner join STUDENT S on S.id = I.student_id where I.student_id = %s"
     curs.execute(sql, student_id)
+    conn.commit()
     data = curs.fetchall()
     student_image = load_from_aws_image(data[0][1])
+    cv2.imshow('student_img', student_image)
     student_data = [data[0][0], student_image]
     return student_data
 
@@ -86,29 +85,29 @@ def store_cheat_log(exam_id, student_id, data, error_type, remarks):
 
 #6. TA 본인인증 현황 보기
 #(6-1) 얼굴인식X
-def accecpt_face_false(exam_id):
-    sql = "select S.name, S.id from EXAM_STUDENT ES inner join STUDENT S on ES.student_id = S.id where ES.exam_id = %s and ES.accecpt_face = false"
+def accept_face_false(exam_id):
+    sql = "select S.name, S.id from EXAM_STUDENT ES inner join STUDENT S on ES.student_id = S.id where ES.exam_id = %s and ES.accept_face = false"
     curs.execute(sql, exam_id)
     conn.commit()
     return curs.fetchall()
 
 #(6-2) 신분증인식X
-def accecpt_idcard_false(exam_id):
-    sql = "select S.name, S.id from EXAM_STUDENT ES inner join STUDENT S on ES.student_id = S.id where ES.exam_id = %s and ES.accecpt_idcard = false"
+def accept_idcard_false(exam_id):
+    sql = "select S.name, S.id from EXAM_STUDENT ES inner join STUDENT S on ES.student_id = S.id where ES.exam_id = %s and ES.accept_idcard = false"
     curs.execute(sql, exam_id)
     conn.commit()
     return curs.fetchall()
 
 #(6-3) 얼굴인식O
-def accecpt_face_true(exam_id):
-    sql = "select S.name, S.id from EXAM_STUDENT ES inner join STUDENT S on ES.student_id = S.id where ES.exam_id = %s and ES.accecpt_face = true"
+def accept_face_true(exam_id):
+    sql = "select S.name, S.id from EXAM_STUDENT ES inner join STUDENT S on ES.student_id = S.id where ES.exam_id = %s and ES.accept_face = true"
     curs.execute(sql, exam_id)
     conn.commit()
     return curs.fetchall()
 
 #(6-4) 신분증인식O
-def accecpt_idcard_true(exam_id):
-    sql = "select S.name, S.id from EXAM_STUDENT ES inner join STUDENT S on ES.student_id = S.id where ES.exam_id = %s and ES.accecpt_idcard = true"
+def accept_idcard_true(exam_id):
+    sql = "select S.name, S.id from EXAM_STUDENT ES inner join STUDENT S on ES.student_id = S.id where ES.exam_id = %s and ES.accept_idcard = true"
     curs.execute(sql, exam_id)
     conn.commit()
     return curs.fetchall()
@@ -122,7 +121,7 @@ def load_ta_sublist(ta_id, pw_code):
 
 #8. TA 시험 감독 중 log 가져오기
 def load_cheat_log(exam_id):
-    sql = "select L.student_id, S.name, L.error_type, L.data, L.remarks from Log L inner join STUDENT S on L.student_id = S.id where exam_id = %s"
+    sql = "select L.student_id, S.name, L.error_type, L.id, L.data, L.remarks from LOG L inner join STUDENT S on L.student_id = S.id where exam_id = %s"
     curs.execute(sql, exam_id)
     conn.commit()
     return curs.fetchall()
@@ -130,8 +129,8 @@ def load_cheat_log(exam_id):
 
 
 def upload_to_aws(local_file, bucket, s3_file):
-    s3 = boto3.client('s3', aws_access_key_id=ACCESS_KEY,
-                      aws_secret_access_key=SECRET_KEY)
+    s3 = boto3.client('s3', aws_access_key_id=Key.ACCESS_KEY,
+                      aws_secret_access_key=Key.SECRET_KEY)
     try:
         s3.upload_file(local_file, bucket, s3_file)
         print("Upload Successful")
@@ -144,8 +143,8 @@ def upload_to_aws(local_file, bucket, s3_file):
         return False
 
 def load_from_aws_image(path):
-    s3 = boto3.resource('s3', aws_access_key_id,
-                      aws_secret_access_key)
+    s3 = boto3.resource('s3', aws_access_key_id=Key.ACCESS_KEY,
+                      aws_secret_access_key=Key.SECRET_KEY)
     obj = s3.Object('iseeyou', path)
     body = obj.get()['Body'].read()
     encoded = np.array(list(body), dtype = np.uint8)
@@ -154,8 +153,8 @@ def load_from_aws_image(path):
     return img
 
 def load_from_aws_audio(path):
-    s3 = boto3.resource('s3', aws_access_key_id,
-                      aws_secret_access_key)
+    s3 = boto3.resource('s3', aws_access_key_id=Key.ACCESS_KEY,
+                      aws_secret_access_key=Key.SECRET_KEY)
     obj = s3.Object('iseeyou', path)
     audio = obj.get()['Body'].read()
 

@@ -1,10 +1,9 @@
 from tkinter import *
 import tkinter as tk
-import db_connection as db
 import threading
-
-conn, cursor = db.connect_DB('i-see-you.cxoipp1lpz0c.ap-northeast-2.rds.amazonaws.com',
-                                 'admin', 'teamsejong', 'isy')
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+from Database import DBconnection as DB
 
 
 def call_on_Exam():
@@ -72,11 +71,10 @@ class on_Exam_(Tk):
 
     def Load_cheating_Student(self):
         self.cheatingLogList.delete(0, Listbox.size((self.cheatingLogList)))
-        query = "select S.id, S.name, L.error_type, L.id from LOG L inner join STUDENT S on L.student_id = S.id;"
 
         ### FIXME 쓰레드로 지속적으로 반복 해야 함.
 
-        query_cheating_Log = db.executeQuery(conn, cursor, query)
+        query_cheating_Log = DB.load_cheat_log(1)
 
         for data in query_cheating_Log:
             id = data[0]
@@ -100,7 +98,7 @@ class on_Exam_(Tk):
             self.cheatingLogList.insert(END, input_data)
 
         print("불러오기 성공")
-        self.after(5000,self.Load_cheating_Student)
+        self.after(5000, self.Load_cheating_Student)
 
 
 
@@ -113,15 +111,14 @@ def manual_accept():
     input_number = Text(newWindow2,height=5)
     input_number.pack()
 
-    def manualy_accept_to_db():
+    def manualy_accept_to_DB():
         student_id =input_number.get("1.0","end")
-        db.accept_id_card(conn,cursor,1,student_id)
-        db.accept_face_recognition(conn,cursor,1,student_id)
+        DB.update_accept_check(student_id, 1)
         window.Load_student()
         newWindow2.destroy()
 
 
-    input_button = Button(newWindow2,text="확인",command=manualy_accept_to_db)
+    input_button = Button(newWindow2,text="확인",command=manualy_accept_to_DB)
     input_button.pack()
 
 
@@ -164,14 +161,10 @@ class Ready_For_Exam(Tk):
         self.reLoad_button.grid(row=4, column=1)
 
     def Load_student(self):
-        query_accepted_face = db.executeQuery(conn, cursor,
-                                              "select S.name, S.id from EXAM_STUDENT ES inner join STUDENT S on ES.student_id = S.id where ES.exam_id=1 and ES.accept_face=true")
-        query_accepted_idcard = db.executeQuery(conn, cursor,
-                                                "select S.name, S.id from EXAM_STUDENT ES inner join STUDENT S on ES.student_id = S.id where ES.exam_id=1 and ES.accept_idcard=true")
-        query_not_accepted_face = db.executeQuery(conn, cursor,
-                                                  "select S.name, S.id from EXAM_STUDENT ES inner join STUDENT S on ES.student_id = S.id where ES.exam_id=1 and ES.accept_face=false")
-        query_not_accepted_idcard = db.executeQuery(conn, cursor,
-                                                    "select S.name, S.id from EXAM_STUDENT ES inner join STUDENT S on ES.student_id = S.id where ES.exam_id=1 and ES.accept_idcard=false")
+        query_accepted_face = DB.accept_face_true(1)
+        query_accepted_idcard = DB.accept_idcard_true(1)
+        query_not_accepted_face = DB.accept_face_false(1)
+        query_not_accepted_idcard = DB.accept_idcard_false(1)
 
         '''
         select S.name, S.id
@@ -335,7 +328,7 @@ def on_Exam():
 
         ### FIXME 쓰레드로 지속적으로 반복 해야 함.
 
-        query_cheating_Log = db.executeQuery(conn, cursor, query)
+        query_cheating_Log = DB.executeQuery(conn, cursor, query)
 
         for data in query_cheating_Log:
             id = data[0]

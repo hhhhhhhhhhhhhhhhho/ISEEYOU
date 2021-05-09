@@ -1,11 +1,12 @@
-from Application.DBconnection import load_studentdata, load_student_sublist
 import Application.webviewer
 from datetime import datetime
 from PyQt5 import QtCore, QtWidgets, QtGui
 import res
 from Vision import face_check
 import face_recognition
-
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+from Database import DBconnection as DB
 
 class MainWidget(QtWidgets.QWidget):
     test_index = -1
@@ -177,9 +178,11 @@ class MainWidget(QtWidgets.QWidget):
         student_id = self.login.id_input.text()
         print(student_id, '로그인 시도..')
 
-        self.student_data = load_studentdata(student_id)
+        #student_data[0] = 학생이름
+        #student_data[1] = 학생사진
+        self.student_data = DB.load_studentdata(student_id)
         print(self.student_data)
-        self.sublist = load_student_sublist(student_id)
+        self.sublist = DB.load_student_sublist(student_id)
 
         if self.sublist:
             print('로그인 성공')
@@ -199,7 +202,7 @@ class MainWidget(QtWidgets.QWidget):
 
     def start_face_check(self):
         kim_image = face_recognition.load_image_file('kim.jpg')
-        if face_check.face_check(kim_image):
+        if face_check.face_check(self.student_data[1]):
             self.lbl_facecheck_ok.show()
             self.btn_facecheck.setEnabled(False)
             #self.btn_start_test.setEnabled(True)
