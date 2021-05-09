@@ -15,6 +15,7 @@ class Ui_Form(object):
         Form.resize(641, 502)
         Form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         Form.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+
         Form.setStyleSheet("QPushButton{\n"
         "    background-color:rgba(85,98,112,255);\n"
         "    color:rgba(255,255,255,200);\n"
@@ -125,10 +126,14 @@ class Ui_Form(object):
         self.label_10 = QtWidgets.QLabel(Form)
         self.label_10.setGeometry(QtCore.QRect(80, 260, 16, 21))
         self.label_10.setObjectName("label_10")
-
-
-        self.label.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25,xOffset=0,yOffset=0))
-        self.pushButton.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25,xOffset=0,yOffset=3))
+        self.pushButton_5 = QtWidgets.QPushButton(Form)
+        self.pushButton_5.setGeometry(QtCore.QRect(110, 290, 75, 23))
+        self.pushButton_5.setObjectName("pushButton_5")
+        self.label_11 = QtWidgets.QLabel(Form)
+        self.label_11.setGeometry(QtCore.QRect(80, 290, 16, 21))
+        self.label_11.setObjectName("label_11")
+        self.label.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25, xOffset=0, yOffset=0))
+        self.pushButton.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25, xOffset=0, yOffset=3))
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -149,8 +154,8 @@ class Ui_Form(object):
         self.pushButton_4.setText(_translate("Form", "신분증인식"))
         self.label_2.setText(_translate("Form", "<html><head/><body><p><img src=\":/all/check.png\"/></p></body></html>"))
         self.label_10.setText(_translate("Form", "<html><head/><body><p><img src=\":/all/check.png\"/></p></body></html>"))
-
-
+        self.pushButton_5.setText(_translate("Form", "화면 설정"))
+        self.label_11.setText(_translate("Form", "<html><head/><body><p><img src=\":/all/check.png\"/></p></body></html>"))
 
 if __name__ == "__main__":
     import sys
