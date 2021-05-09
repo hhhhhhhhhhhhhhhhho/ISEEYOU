@@ -9,6 +9,7 @@ Database/DBconnection.py
 .idea/
 
 */__pycache__/*
+Application/__pycache__/
 
 */.ipynb_checkpoints/
 */audio_data/
