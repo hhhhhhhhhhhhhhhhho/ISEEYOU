@@ -2,4 +2,12 @@
   <qresource prefix="image">
     <file>세종.jpg</file>
   </qresource>
+  <qresource prefix="all">
+    <file>clock.png</file>
+    <file>check.png</file>
+  </qresource>
+  <qresource prefix="student">
+    <file>driving-license.png</file>
+    <file>clock.png</file>
+  </qresource>
 </RCC>
