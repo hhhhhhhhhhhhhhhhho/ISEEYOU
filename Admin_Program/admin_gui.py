@@ -1,6 +1,7 @@
 from tkinter import *
 import tkinter as tk
 import threading
+from PIL import Image, ImageTk
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from Database import DBconnection as DB
@@ -17,11 +18,11 @@ class on_Exam_(Tk):
     def __init__(self):
         window.destroy()
         Tk.__init__(self)
-        self.geometry("300x400")
+        self.geometry("700x400")
         self.title("시험 중 입니다.")
         self.resizable(True,True)
         self.cheatingLog=Label(self,text=" 실시간 부정행위 로그")
-        self.cheatingLogList = Listbox(self, selectmode='extend', height=20, width=30)
+        self.cheatingLogList = Listbox(self, selectmode='extend', height=20, width=80)
         self.cheatingLog.pack()
         self.cheatingLogList.bind('<<ListboxSelect>>', print("hello"))
         self.cheatingLogList.pack()
@@ -34,40 +35,42 @@ class on_Exam_(Tk):
         checking_window.resizable(True, True)
         checking_window.geometry("700x400")
 
-        cheating_ID = self.cheatingLogList.get(self.cheatingLogList.curselection()[0])
-        studentID, student_name , cheatingNumber, cheating_code = cheating_ID.split('    ')
-
-        print(studentID)
-        print(cheatingNumber)
-        cheating_ID = cheatingNumber
+        cheat_log = self.cheatingLogList.get(self.cheatingLogList.curselection()[0])
+        cheatingNumber, studentID, student_name, cheating_code, remarks, data_path = cheat_log.split('    ')
 
         # print(cheatingLogList.get(cheatingLogList.curselection()[0]))
         # query = "select S.id, S.name, L.error_type, L.id from LOG L inner join STUDENT S on L.student_id = S.id;"
 
-
-        if cheating_code == "2인 이상 탐지": ### FIXME 2명이상 얼굴 인식 된 경우 <사진 같이 보여줌 >
-            query = "select " # cheating ID 로 image 불러오는 query
-            image = PhotoImage(file="test.png")
+        if cheating_code == '1': ### FIXME 2명이상 얼굴 인식 된 경우 <사진 같이 보여줌 >
+            print("checking ID = 1")
+            image = ImageTk.PhotoImage(image=Image.fromarray(DB.load_from_aws_image(data_path)), master=checking_window)
+            img = Label(checking_window, image=image)
             text = Label(checking_window,text=" 얼굴 인식 사진 결과 ")
-            img = Label(checking_window,image=image)
             text.pack()
             img.pack()
-            print("checking ID = 1")
 
-        if cheating_code == "시선 추적 탐지": ### FIXME 시선추적 부정행위 관련 < 사진 같이 보여줌 >
-            query = "select "  # cheating ID 로 image 불러오는 query
-            image = PhotoImage(file="test.png")
+
+        if cheating_code == '2': ### FIXME 시선추적 부정행위 관련 < 사진 같이 보여줌 >
+            image = ImageTk.PhotoImage(image=Image.fromarray(DB.load_from_aws_image(data_path)), master=checking_window)
             img = Label(checking_window, image=image)
             text = Label(checking_window, text=" 시선 추적 캡쳐 사진 결과 ")
             text.pack()
             img.pack()
 
-        if cheating_code == "대화 탐지": ### FIXME 음성인식 부정행위 관련 < 음성 파일 경로만 보여 줌 >
-            # cheating ID 로 경로 보여주는 qeury 작성
-            print("hello ~ !")
+        if cheating_code == '3': ### FIXME 음성인식 부정행위 관련 < 음성 파일 경로만 보여 줌 >
+            DB.load_from_aws_audio(data_path)
+            text = Label(checking_window, text=" 부정 음성 인식 결과 ")
+            text.pack()
 
-        if cheating_code == "부정 프로그램 활성화": ### FIXME 부정 프로그램 활성화
-            print("   ")
+
+        if cheating_code == '4': ### FIXME 부정 프로그램 활성화
+            image = ImageTk.PhotoImage(image=Image.fromarray(DB.load_from_aws_image(data_path)), master=checking_window)
+            img = Label(checking_window, image=image)
+            text = Label(checking_window, text=" 부정 프로그램 캡처 사진 결과 ")
+            text.pack()
+            img.pack()
+
+        checking_window.mainloop()
 
     def Load_cheating_Student(self):
         self.cheatingLogList.delete(0, Listbox.size((self.cheatingLogList)))
@@ -77,22 +80,21 @@ class on_Exam_(Tk):
         query_cheating_Log = DB.load_cheat_log(1)
 
         for data in query_cheating_Log:
-            id = data[0]
+            student_id = data[0]
             name = data[1]
             code = data[2]
             cheat_id = data[3]
+            data_path = data[4]
+            remarks = data[5]
+            '''
+            code 1 : 2인 이상 탐지
+            code 2 : 시선 추적 탐지
+            code 3 : 대화 탐지
+            code 4 : 부정 프로그램 활성화
+            '''
             ### FIXME 관련 파일 혹은 파일 경
-            if code == 1:
-                input_data = str(id) + '    ' + str(name) + '    ' + "2인 이상 탐지" + '    ' + str(cheat_id)
+            input_data = str(cheat_id) + '    ' + str(student_id) + '    ' + str(name) + '    ' + str(code) + '    ' + str(remarks) + '    ' + str(data_path)
 
-            if code == 2:
-                input_data = str(id) + '    ' + str(name) + '    ' + "시선 추적 탐지" '    ' + str(cheat_id)
-
-            if code == 3:
-                input_data = str(id) + '    ' + str(name) + '    ' + "대화 탐지" + '    ' + str(cheat_id)
-
-            if code == 4:
-                input_data = str(id) + '    ' + str(name) + '    ' + "부정 프로그램 활성화" + '    ' + str(cheat_id)
             ### FIXME Cheating Code 별로 음성 , 시선추적 , 화면전환 텍스트로 바꿔주기
 
             self.cheatingLogList.insert(END, input_data)

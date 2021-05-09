@@ -5,7 +5,9 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 from datetime import datetime
 import cv2
+import winsound
 from Database import AccessKey as Key
+
 
 # mysql 연결
 conn = pymysql.connect(
@@ -148,9 +150,9 @@ def load_from_aws_image(path):
     obj = s3.Object('iseeyou', path)
     body = obj.get()['Body'].read()
     encoded = np.array(list(body), dtype = np.uint8)
-    img = cv2.imdecode(encoded, cv2.IMREAD_COLOR)
-
-    return img
+    imageBGR = cv2.imdecode(encoded, cv2.IMREAD_COLOR)
+    imageRGB = cv2.cvtColor(imageBGR, cv2.COLOR_BGR2RGB)
+    return imageRGB
 
 def load_from_aws_audio(path):
     s3 = boto3.resource('s3', aws_access_key_id=Key.ACCESS_KEY,
@@ -158,3 +160,4 @@ def load_from_aws_audio(path):
     obj = s3.Object('iseeyou', path)
     audio = obj.get()['Body'].read()
 
+    winsound.PlaySound(audio, winsound.SND_MEMORY)
