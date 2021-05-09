@@ -5,7 +5,7 @@ g.DS_Store
 
 Audio/audio_korean/.ipynb_checkpoints/
 Audio/audio_korean/audio_data/
-Database/DBconnection.py
+Database/AccessKey.py
 .idea/
 
 */__pycache__/*
