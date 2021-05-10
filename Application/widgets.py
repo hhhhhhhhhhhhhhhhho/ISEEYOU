@@ -114,15 +114,18 @@ class MainWidget(QtWidgets.QWidget):
         font.setFamily("맑은 고딕")
         font.setPointSize(12)
         self.btn_exit.setFont(font)
+        self.btn_exit.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_exit.setObjectName("pushbutton_exit")
 
         self.btn_facecheck = QtWidgets.QPushButton(self)
         self.btn_facecheck.clicked.connect(self.start_face_check)
         self.btn_facecheck.setGeometry(QtCore.QRect(110, 230, 75, 23))
+        self.btn_facecheck.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_facecheck.setObjectName("pushButton_facecheck")
 
         self.btn_idcardcheck = QtWidgets.QPushButton(self)
         self.btn_idcardcheck.setGeometry(QtCore.QRect(110, 260, 75, 23))
+        self.btn_idcardcheck.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_idcardcheck.setObjectName("pushButton_idcardcheck")
 
         self.lbl_facecheck_ok = QtWidgets.QLabel(self)
@@ -137,6 +140,7 @@ class MainWidget(QtWidgets.QWidget):
 
         self.btn_monitor_setting = QtWidgets.QPushButton(self)
         self.btn_monitor_setting.setGeometry(QtCore.QRect(110, 290, 75, 23))
+        self.btn_monitor_setting.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_monitor_setting.setObjectName("pushButton_monitor_setting")
 
         self.lbl_monitor_setting_ok = QtWidgets.QLabel(self)
@@ -274,7 +278,7 @@ class Login(QtWidgets.QWidget):
         self.pushButton.setGeometry(QtCore.QRect(360, 400, 221, 41))
         self.pushButton.setStyleSheet("")
         self.pushButton.setObjectName("pushButton")
-
+        self.pushButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.label_ISeeYou = QtWidgets.QLabel(self)
         self.label_ISeeYou.setGeometry(QtCore.QRect(70, 270, 250, 41))
         font = QtGui.QFont()
@@ -360,7 +364,7 @@ class SelectTest(QtWidgets.QDialog):
         self.label_main.setObjectName("label_main")
 
         self.comboBox = QtWidgets.QComboBox(self)
-        self.comboBox.setGeometry(QtCore.QRect(80, 130, 251, 40))
+        self.comboBox.setGeometry(QtCore.QRect(80, 130, 245, 40))
         self.comboBox.setStyleSheet("font-size: 1rem;\n"
                                     "  font-weight: 400;\n"
                                     "  line-height: 1.5;\n"
@@ -377,13 +381,14 @@ class SelectTest(QtWidgets.QDialog):
                                     "appearance:none;\n"
                                     "-webkit-appearance:none;")
         self.comboBox.setObjectName("comboBox")
+        self.comboBox.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
         self.label_title = QtWidgets.QLabel(self)
         self.label_title.setGeometry(QtCore.QRect(160, 30, 91, 41))
 
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
-        font.setPointSize(15)
+        font.setPointSize(13)
         font.setBold(True)
         font.setWeight(75)
 
@@ -394,6 +399,7 @@ class SelectTest(QtWidgets.QDialog):
         self.pushButton.setGeometry(QtCore.QRect(92, 200, 221, 41))
         self.pushButton.setStyleSheet("")
         self.pushButton.setObjectName("pushButton")
+        self.pushButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.pushButton.clicked.connect(self.btn_clicked)
 
         self.label_main.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25, xOffset=0, yOffset=0))
