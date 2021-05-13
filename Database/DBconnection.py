@@ -7,7 +7,7 @@ from datetime import datetime
 import cv2
 import winsound
 from Database import AccessKey as Key
-
+import pygame
 
 # mysql 연결
 conn = pymysql.connect(
@@ -154,10 +154,23 @@ def load_from_aws_image(path):
     imageRGB = cv2.cvtColor(imageBGR, cv2.COLOR_BGR2RGB)
     return imageRGB
 
+
 def load_from_aws_audio(path):
+    print(path)
     s3 = boto3.resource('s3', aws_access_key_id=Key.ACCESS_KEY,
                       aws_secret_access_key=Key.SECRET_KEY)
     obj = s3.Object('iseeyou', path)
     audio = obj.get()['Body'].read()
+    #winsound.PlaySound(audio, winsound.SND_MEMORY)
 
-    winsound.PlaySound(audio, winsound.SND_MEMORY)
+    pygame.mixer.pre_init(frequency=16000, size=-16, channels=1)
+    pygame.init()
+    sound = pygame.mixer.Sound(buffer=audio)
+    running = True
+    while running:
+        # 원하는 조건 충족시
+        if not pygame.mixer.music.get_busy():
+            # 특정 사운드 실행
+            sound.play()
+            #pygame.time.delay(10000)
+            running = False
