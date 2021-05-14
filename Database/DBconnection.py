@@ -32,7 +32,7 @@ def load_studentdata(student_id):
     conn.commit()
     data = curs.fetchall()
     student_image = load_from_aws_image(data[0][1])
-    cv2.imshow('student_img', student_image)
+    #cv2.imshow('student_img', student_image)
     student_data = [data[0][0], student_image]
     return student_data
 
