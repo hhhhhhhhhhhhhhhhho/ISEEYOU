@@ -13,7 +13,8 @@ class MainWidget(QtWidgets.QWidget):
         super().__init__()
         self.setting = {
             'face_check': False,
-            'idcard_check': False
+            'idcard_check': False,
+            'monitor_setting': False
         }
 
         self.login = Login()
