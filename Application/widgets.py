@@ -11,7 +11,6 @@ class MainWidget(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
-
         self.login = Login()
         self.login.pushButton.clicked.connect(self.btn_login_clicked)
         self.login.id_input.returnPressed.connect(self.btn_login_clicked)
@@ -107,6 +106,7 @@ class MainWidget(QtWidgets.QWidget):
         self.lbl_stdinfo_icon.setObjectName("label_stdinfo_icon")
 
         self.btn_exit = QtWidgets.QPushButton(self)
+        self.btn_exit.clicked.connect(self.btn_exit_clicked)
         self.btn_exit.setGeometry(QtCore.QRect(550, 80, 41, 31))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
@@ -172,7 +172,9 @@ class MainWidget(QtWidgets.QWidget):
         self.btn_monitor_setting.setText(_translate("Form", "화면 설정"))
         self.lbl_monitor_setting_ok.setText(_translate("Form", "<html><head/><body><p><img src=\":/all/check.png\"/></p></body></html>"))
 
-            
+    def btn_exit_clicked(self):
+        QtCore.QCoreApplication.instance().quit()
+
     def btn_login_clicked(self):
         # db로 학번 전달, 학번 검사 후 로그인, 사용자의 시험 과목 목록 받아옴.
 
