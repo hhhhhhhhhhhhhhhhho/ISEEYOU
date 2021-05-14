@@ -1,11 +1,10 @@
 import Application.webviewer
 from PyQt5 import QtCore, QtWidgets, QtGui
-from Vision import face_check, text
+from Vision import face_check, text, point
 import res
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from Database import DBconnection as DB
-
 class MainWidget(QtWidgets.QWidget):
     test_index = -1
 
@@ -145,6 +144,7 @@ class MainWidget(QtWidgets.QWidget):
         self.lbl_idcardcheck_ok.setObjectName("label_idcardcheck_ok")
 
         self.btn_monitor_setting = QtWidgets.QPushButton(self)
+        self.btn_monitor_setting.clicked.connect(self.start_monitor_setting)
         self.btn_monitor_setting.setGeometry(QtCore.QRect(110, 290, 75, 23))
         self.btn_monitor_setting.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_monitor_setting.setObjectName("pushButton_monitor_setting")
@@ -235,15 +235,17 @@ class MainWidget(QtWidgets.QWidget):
         print(self.setting)
 
     def start_monitor_setting(self):
+        p1,p2,p3,p4 = point.bitOperation()
         # 화면세팅 함수
         # 세팅 완료하면 True 반환하게 하고, True 반환하면 밑에 있는 코드 실행되도록 if 조건문에서 함수 호출
-
-        self.lbl_monitor_setting_ok.show()
-        self.btn_monitor_setting.setEnabled(False)
-        self.setting['monitor_setting'] = True
+        if True:
+            self.lbl_monitor_setting_ok.show()
+            self.btn_monitor_setting.setEnabled(False)
+            self.setting['monitor_setting'] = True
 
         if all(list(self.setting.values())):
             self.btn_start_test.setEnabled(True)
+
 
     def exam_start(self):
         Application.webviewer.ExamProcess()

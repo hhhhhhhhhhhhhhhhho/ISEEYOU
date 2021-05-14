@@ -117,7 +117,8 @@ padding-bottim:7px;</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">cursor:pointer;
+</string>
    </property>
    <property name="text">
     <string>선택</string>

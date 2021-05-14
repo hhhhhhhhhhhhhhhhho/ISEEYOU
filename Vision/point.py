@@ -1,21 +1,16 @@
 import cv2
-import GazePointGUI
-import threading
-import eyetracking_module
-from time import sleep
-
-vpos = 0
-hpos = 0
-
-width = 800
-height = 600
-
-x = 500
-y = 100
-
-str = "Align the position and press the 'Enter' button"
-
+from Vision import GazePointGUI,eyetracking_module
 def bitOperation():
+    vpos = 0
+    hpos = 0
+
+    width = 800
+    height = 600
+
+    x = 500
+    y = 100
+
+    str = "Align the position and press the 'Enter' button"
     cap = cv2.VideoCapture(0)
 
     while True:
@@ -48,7 +43,6 @@ def bitOperation():
             break
 
     cv2.destroyAllWindows()
-p1,p2,p3,p4=bitOperation()
-eyetracking_module.eyetracking(p1,p2,p3,p4)
+
 
 
