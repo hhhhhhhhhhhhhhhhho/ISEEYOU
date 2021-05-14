@@ -238,7 +238,7 @@ class MainWidget(QtWidgets.QWidget):
         p1,p2,p3,p4 = point.bitOperation()
         # 화면세팅 함수
         # 세팅 완료하면 True 반환하게 하고, True 반환하면 밑에 있는 코드 실행되도록 if 조건문에서 함수 호출
-        if True:
+        if p1:
             self.lbl_monitor_setting_ok.show()
             self.btn_monitor_setting.setEnabled(False)
             self.setting['monitor_setting'] = True
