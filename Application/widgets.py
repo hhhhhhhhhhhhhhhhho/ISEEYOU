@@ -1,9 +1,7 @@
 import Application.webviewer
-from datetime import datetime
 from PyQt5 import QtCore, QtWidgets, QtGui
+from Vision import face_check, text
 import res
-from Vision import face_check
-import face_recognition
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from Database import DBconnection as DB
@@ -124,6 +122,7 @@ class MainWidget(QtWidgets.QWidget):
         self.btn_facecheck.setObjectName("pushButton_facecheck")
 
         self.btn_idcardcheck = QtWidgets.QPushButton(self)
+        self.btn_idcardcheck.clicked.connect(self.start_idcard_check)
         self.btn_idcardcheck.setGeometry(QtCore.QRect(110, 260, 75, 23))
         self.btn_idcardcheck.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_idcardcheck.setObjectName("pushButton_idcardcheck")
@@ -205,11 +204,15 @@ class MainWidget(QtWidgets.QWidget):
             LoginFaultMessage()
 
     def start_face_check(self):
-        kim_image = face_recognition.load_image_file('kim.jpg')
         if face_check.face_check(self.student_data[1]):
             self.lbl_facecheck_ok.show()
             self.btn_facecheck.setEnabled(False)
-            #self.btn_start_test.setEnabled(True)
+
+    def start_idcard_check(self):
+        '''if text.idCheck(self.student_data[0]):
+            self.lbl_idcardcheck_ok.show()
+            self.btn_idcardcheck.setEnabled(False)'''
+        print(self.student_data[0])
 
     def exam_start(self):
         Application.webviewer.ExamProcess()

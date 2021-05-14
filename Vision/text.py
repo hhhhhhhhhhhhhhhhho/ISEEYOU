@@ -29,12 +29,14 @@ def general(frame):
     return textRec(th)
 
 def idcheck(student_name):
+    check_success = False
     while True:
         ret, frame = video_capture.read()
         stname=general(cropImage(x, x_e, y, y_e, frame))
         cv2.imshow('Video', frame)
         if(stname.find(student_name)>0):
             print("확인되었습니다")
+            check_success = True
             break
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -42,4 +44,4 @@ def idcheck(student_name):
     video_capture.release()
     cv2.destroyAllWindows()
 
-idcheck("김찬규")
+    return check_success
