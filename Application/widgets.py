@@ -11,6 +11,11 @@ class MainWidget(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
+        self.setting = {
+            'face_check': False,
+            'idcard_check': False
+        }
+
         self.login = Login()
         self.login.pushButton.clicked.connect(self.btn_login_clicked)
         self.login.id_input.returnPressed.connect(self.btn_login_clicked)
@@ -72,6 +77,7 @@ class MainWidget(QtWidgets.QWidget):
         self.lbl_subname.setObjectName("lbl_subname")
 
         self.btn_start_test = QtWidgets.QPushButton(self)
+        self.btn_start_test.clicked.connect(self.exam_start)
         self.btn_start_test.setEnabled(False)
         self.btn_start_test.setGeometry(QtCore.QRect(60, 350, 511, 51))
         self.btn_start_test.setStyleSheet("")
@@ -209,12 +215,34 @@ class MainWidget(QtWidgets.QWidget):
         if face_check.face_check(self.student_data[1]):
             self.lbl_facecheck_ok.show()
             self.btn_facecheck.setEnabled(False)
+            self.setting['face_check'] = True
+
+        if all(list(self.setting.values())):
+            self.btn_start_test.setEnabled(True)
+
+        print(self.setting)
 
     def start_idcard_check(self):
-        '''if text.idCheck(self.student_data[0]):
+        if text.idcheck(self.student_data[0]):
             self.lbl_idcardcheck_ok.show()
-            self.btn_idcardcheck.setEnabled(False)'''
-        print(self.student_data[0])
+            self.btn_idcardcheck.setEnabled(False)
+            self.setting['idcard_check'] = True
+
+        if all(list(self.setting.values())):
+            self.btn_start_test.setEnabled(True)
+
+        print(self.setting)
+
+    def start_monitor_setting(self):
+        # 화면세팅 함수
+        # 세팅 완료하면 True 반환하게 하고, True 반환하면 밑에 있는 코드 실행되도록 if 조건문에서 함수 호출
+
+        self.lbl_monitor_setting_ok.show()
+        self.btn_monitor_setting.setEnabled(False)
+        self.setting['monitor_setting'] = True
+
+        if all(list(self.setting.values())):
+            self.btn_start_test.setEnabled(True)
 
     def exam_start(self):
         Application.webviewer.ExamProcess()
