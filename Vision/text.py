@@ -1,7 +1,7 @@
 import pytesseract
 import cv2
 import numpy as np
-
+from Database import DBconnection as DB
 student_name="김찬규"
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 video_capture = cv2.VideoCapture(0)
@@ -28,9 +28,12 @@ def general(frame):
     cv2.imshow('th', th)
     return textRec(th)
 
-def idcheck(student_name):
+def idcheck(exam_id, student_id, student_name):
     check_success = False
-    while True:
+    while check_success==False:
+        if DB.load_accept_id_card(exam_id, student_id):
+            check_success = True
+            break
         ret, frame = video_capture.read()
         stname=general(cropImage(x, x_e, y, y_e, frame))
         cv2.imshow('Video', frame)

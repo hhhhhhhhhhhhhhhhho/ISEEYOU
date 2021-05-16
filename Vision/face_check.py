@@ -3,8 +3,9 @@ import cv2
 import numpy as np
 import dlib
 import datetime
+from Database import DBconnection as DB
 
-def face_check(img):
+def face_check(exam_id, student_id, img):
     MAX_SCD = 300
     cur_scd = 0
     video_capture = cv2.VideoCapture(0)
@@ -27,6 +28,10 @@ def face_check(img):
         cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
     while True:
+        if DB.load_accept_face(exam_id, student_id):
+            video_capture.release()
+            cv2.destroyAllWindows()
+            return True
         # Grab a single frame of video
         ret, frame = video_capture.read()
 

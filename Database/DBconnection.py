@@ -50,17 +50,27 @@ def store_clipboard(student_id, exam_id, clipboard):
     conn.commit()
 
 #4. 본인확인 완료
-#(4-1) 얼굴인식 완료
-def accept_face_recognition(exam_id, student_id):
-    sql = "update EXAM_STUDENT set accept_face = true where exam_id = %s and student_id = %s"
+#(4-1) 얼굴인식 완료확인
+def load_accept_face(exam_id, student_id):
+    sql = "select accept_face from EXAM_STUDENT where exam_id = %s and student_id = %s"
     curs.execute(sql, (exam_id, student_id))
     conn.commit()
+    result = curs.fetchall()
+    if result[0][0] == 0:
+        return False
+    else:
+        return True
 
-#(4-2) 얼굴인식 완료
-def accept_id_card(exam_id, student_id):
-    sql = "update EXAM_STUDENT set accept_idcard = true where exam_id = %s and student_id = %s"
+#(4-2) 신분증 완료확인
+def load_accept_id_card(exam_id, student_id):
+    sql = "select accept_idcard from EXAM_STUDENT where exam_id = %s and student_id = %s"
     curs.execute(sql, (exam_id, student_id))
     conn.commit()
+    result = curs.fetchall()
+    if result[0][0] == 0:
+        return False
+    else:
+        return True
 
 #(4-3) 학번으로 얼굴인식, 신분증인식 완료
 def update_accept_check(student_id, exam_id):

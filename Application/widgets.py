@@ -187,14 +187,14 @@ class MainWidget(QtWidgets.QWidget):
 
         # 로그인 성공 => 시험 선택 dialog 띄움 || 로그인 실패(db에 해당학번 없음) => 실패 dialog 띄울 예정
         print('login btn clicked!')
-        student_id = self.login.id_input.text()
-        print(student_id, '로그인 시도..')
+        self.student_id = self.login.id_input.text()
+        print(self.student_id, '로그인 시도..')
 
         #student_data[0] = 학생이름
         #student_data[1] = 학생사진
-        self.student_data = DB.load_studentdata(student_id)
+        self.student_data = DB.load_studentdata(self.student_id)
         print(self.student_data)
-        self.sublist = DB.load_student_sublist(student_id)
+        self.sublist = DB.load_student_sublist(self.student_id)
 
         if self.sublist:
             print('로그인 성공')
@@ -203,6 +203,8 @@ class MainWidget(QtWidgets.QWidget):
             if test_dial.exec():
                 print('시험 선택 완료')
                 print('test index =', MainWidget.test_index)
+                self.exam_code = self.sublist[MainWidget.test_index][0]
+                print('exam_code=', self.exam_code)
                 self.login.close()
                 self.setup_ui()
                 self.show()
@@ -213,7 +215,7 @@ class MainWidget(QtWidgets.QWidget):
             LoginFaultMessage()
 
     def start_face_check(self):
-        if face_check.face_check(self.student_data[1]):
+        if face_check.face_check(self.exam_code, self.student_id, self.student_data[1]):
             self.lbl_facecheck_ok.show()
             self.btn_facecheck.setEnabled(False)
             self.setting['face_check'] = True
@@ -224,7 +226,7 @@ class MainWidget(QtWidgets.QWidget):
         print(self.setting)
 
     def start_idcard_check(self):
-        if text.idcheck(self.student_data[0]):
+        if text.idcheck(self.exam_code, self.student_id, self.student_data[0]):
             self.lbl_idcardcheck_ok.show()
             self.btn_idcardcheck.setEnabled(False)
             self.setting['idcard_check'] = True
