@@ -43,8 +43,6 @@ def idcheck(exam_id, student_id, student_name):
             break
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-    cv2.waitKey(0)
     video_capture.release()
     cv2.destroyAllWindows()
-
     return check_success
