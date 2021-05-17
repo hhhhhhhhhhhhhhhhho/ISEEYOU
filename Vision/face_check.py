@@ -92,5 +92,3 @@ def face_check(exam_id, student_id, img):
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-
-kim_image = face_recognition.load_image_file("../Application/kim.jpg")
