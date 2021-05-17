@@ -125,7 +125,7 @@ def accept_idcard_true(exam_id):
 
 #7. TA ID/PW로 감독 과목 목록 가져오기
 def load_ta_sublist(ta_id, pw_code):
-    sql = "select E.id, E.subject_name from EXAM E inner join EXAM_TA ET on E.id = ET.exam_id innerjoin TA on ET.ta_id = TA.id where TA.ta_id = %s and TA.pw_code = %s"
+    sql = "select E.id, E.subject_name from EXAM E inner join EXAM_TA ET on E.id = ET.exam_id inner join TA on ET.ta_id = TA.id where TA.ta_id = %s and TA.pw_code = %s"
     curs.execute(sql, (ta_id, pw_code))
     conn.commit()
     return curs.fetchall()
