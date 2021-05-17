@@ -26,8 +26,7 @@ def voice_cheating_recognition():
             #성능이 떨어진다면 제대로 작동하지 않을 가능성이 있음.
 
 
-if __name__ == "__main__":
-
+def Run_Noise_Recognition():
     conn,cursor = db.connect_DB('i-see-you.cxoipp1lpz0c.ap-northeast-2.rds.amazonaws.com',
                                 'admin','teamsejong','isy')
 
