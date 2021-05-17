@@ -24,7 +24,7 @@ class on_Exam_(Tk):
         self.cheatingLog=Label(self,text=" 실시간 부정행위 로그")
         self.cheatingLogList = Listbox(self, selectmode='extend', height=20, width=80)
         self.cheatingLog.pack()
-        self.cheatingLogList.bind('<<ListboxSelect>>', print("hello"))
+        self.cheatingLogList.bind('<<ListboxSelect>>', self.Checking_cheatingInfo)
         self.cheatingLogList.pack()
         self.selectBtn = Button(self, text="확인", command=self.Checking_cheatingInfo)
         self.selectBtn.pack(side='right', ipadx=20, padx=30)

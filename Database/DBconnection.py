@@ -5,7 +5,6 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 from datetime import datetime
 import cv2
-import winsound
 from Database import AccessKey as Key
 import pygame
 
