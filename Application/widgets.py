@@ -400,7 +400,6 @@ class SelectTest(QtWidgets.QDialog):
                                  "border-radius:10px;")
         self.label_main.setText("")
         self.label_main.setObjectName("label_main")
-
         self.comboBox = QtWidgets.QComboBox(self)
         self.comboBox.setGeometry(QtCore.QRect(80, 130, 245, 40))
         self.comboBox.setStyleSheet("font-size: 1rem;\n"

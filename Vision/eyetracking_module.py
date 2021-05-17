@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import sys, os
 import dlib
-from time import sleep
+
 try:
     os.chdir(sys._MEIPASS)
     print(sys._MEIPASS)
@@ -24,7 +24,7 @@ def eyetracking(p1,p2,p3,p4):
     testcnt = 1
     while True:
         ret, frame = video_capture.read()
-        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+
         gray = cv2.cvtColor(src=frame, code=cv2.COLOR_BGR2GRAY)
         faces = detector(gray)
         for face in faces:
