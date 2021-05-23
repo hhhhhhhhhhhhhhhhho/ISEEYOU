@@ -1,3 +1,5 @@
+import io
+
 import numpy as np
 import datetime
 import pymysql
@@ -81,7 +83,7 @@ def update_accept_check(student_id, exam_id):
 #(5-1) 이미지 s3에 저장
 def upload_cheat_img(student_id, exam_id, img):
     path = datetime.today().strftime("%Y-%m-%d") + '/' + str(exam_id) + '/' + str(student_id) + '/' + datetime.now().strftime("%m:%d-%H:%M:%S") + '.jpg'
-    upload_to_aws(img, 'iseeyou', path)
+    upload_image_to_aws(img, 'iseeyou', path)
 
 #(5-2) 음성 s3에 저장
 def upload_cheat_voice(student_id, exam_id, audio):
@@ -139,11 +141,27 @@ def load_cheat_log(exam_id):
 
 
 
-def upload_to_aws(local_file, bucket, s3_file):
+def upload_image_to_aws(image, bucket, s3_file):
     s3 = boto3.client('s3', aws_access_key_id=Key.ACCESS_KEY,
                       aws_secret_access_key=Key.SECRET_KEY)
     try:
-        s3.upload_file(local_file, bucket, s3_file)
+        data = cv2.imencode('.jpg', image)[1].tobytes()
+        s3.upload_fileobj(io.BytesIO(data), bucket, s3_file)
+        print("Upload Successful")
+        return True
+    except FileNotFoundError:
+        print("The file was not found")
+        return False
+    except NoCredentialsError:
+        print("Credentials not available")
+        return False
+
+def upload_audio_to_aws(image, bucket, s3_file):
+    s3 = boto3.client('s3', aws_access_key_id=Key.ACCESS_KEY,
+                      aws_secret_access_key=Key.SECRET_KEY)
+    try:
+        data = cv2.imencode('.jpg', image)[1].tobytes()
+        s3.upload_fileobj(io.BytesIO(data), bucket, s3_file)
         print("Upload Successful")
         return True
     except FileNotFoundError:
@@ -158,6 +176,7 @@ def load_from_aws_image(path):
                       aws_secret_access_key=Key.SECRET_KEY)
     obj = s3.Object('iseeyou', path)
     body = obj.get()['Body'].read()
+    print(body)
     encoded = np.array(list(body), dtype = np.uint8)
     imageBGR = cv2.imdecode(encoded, cv2.IMREAD_COLOR)
     imageRGB = cv2.cvtColor(imageBGR, cv2.COLOR_BGR2RGB)
@@ -188,3 +207,4 @@ def update_accept_face_false(student_id, exam_id):
     sql = "update EXAM_STUDENT set accept_face=false, accept_idcard=false where exam_id = %s and student_id = %s"
     curs.execute(sql, (exam_id, student_id))
     conn.commit()
+
