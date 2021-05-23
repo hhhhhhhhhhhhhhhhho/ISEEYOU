@@ -147,6 +147,7 @@ class MainWidget(QtWidgets.QWidget):
                 print('test index =', MainWidget.test_index)
                 self.exam_code = self.sublist[MainWidget.test_index][0]
                 print('exam_code=', self.exam_code)
+                DB.update_accept_face_false(self.exam_code, self.student_id)
                 self.login.close()
                 self.setup_ui()
                 self.show()
