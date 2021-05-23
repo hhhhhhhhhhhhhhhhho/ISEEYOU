@@ -5,6 +5,8 @@ from Application import res, StyleSheet
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from Database import DBconnection as DB
+
+
 class MainWidget(QtWidgets.QWidget):
     test_index = -1
 
@@ -180,6 +182,7 @@ class MainWidget(QtWidgets.QWidget):
 
     def start_monitor_setting(self):
         p1,p2,p3,p4 = point.bitOperation()
+        print('start_monitor_setting')
         # 화면세팅 함수
         # 세팅 완료하면 True 반환하게 하고, True 반환하면 밑에 있는 코드 실행되도록 if 조건문에서 함수 호출
         if p1:
