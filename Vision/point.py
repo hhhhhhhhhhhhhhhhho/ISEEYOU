@@ -18,7 +18,7 @@ def bitOperation():
     while True:
         ret, student = video_capture.read()
         student = cv2.resize(student, (width, height))
-        face_mask = cv2.imread("facemask.png")
+        face_mask = cv2.imread('img/facemask.png')
 
         face_mask = cv2.resize(face_mask, (width, height))
 

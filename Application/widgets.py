@@ -182,8 +182,8 @@ class MainWidget(QtWidgets.QWidget):
         print(self.setting)
 
     def start_monitor_setting(self):
-        p1,p2,p3,p4 = point.bitOperation()
-        print('start_monitor_setting')
+        p1, p2, p3, p4 = point.bitOperation()
+
         # 화면세팅 함수
         # 세팅 완료하면 True 반환하게 하고, True 반환하면 밑에 있는 코드 실행되도록 if 조건문에서 함수 호출
         if p1:
@@ -194,6 +194,7 @@ class MainWidget(QtWidgets.QWidget):
         if all(list(self.setting.values())):
             self.btn_start_test.setEnabled(True)
 
+        print(self.setting)
 
     def exam_start(self):
         Application.webviewer.ExamProcess()
