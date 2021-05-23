@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from Database import DBconnection as DB
 
+
 def face_check(exam_id, student_id, img):
     MAX_SCD = 300
     cur_scd = 0
@@ -14,6 +15,7 @@ def face_check(exam_id, student_id, img):
     process_this_frame = True
     unknowncnt = 0
     count = 0
+
     def drawRect(a):
         if (a == 1):
             color = (0, 0, 255)

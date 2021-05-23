@@ -1,5 +1,7 @@
 import cv2
-from Vision import GazePointGUI,eyetracking_module
+from Vision import GazePointGUI
+
+
 def bitOperation():
     vpos = 0
     hpos = 0
@@ -11,12 +13,13 @@ def bitOperation():
     y = 100
 
     str = "Align the position and press the 'Enter' button"
-    cap = cv2.VideoCapture(0)
+    video_capture = cv2.VideoCapture(0)
 
     while True:
-        ret, student = cap.read()
+        ret, student = video_capture.read()
         student = cv2.resize(student, (width, height))
         face_mask = cv2.imread("facemask.png")
+
         face_mask = cv2.resize(face_mask, (width, height))
 
         rows, cols, channels = face_mask.shape
@@ -37,12 +40,11 @@ def bitOperation():
         cv2.imshow('positioning', student)
         cv2.moveWindow('positioning', x, y)
         if cv2.waitKey(1) == 13:
-            p1,p2,p3,p4=GazePointGUI.GazePointGUI()
+            p1, p2, p3, p4 =GazePointGUI.GazePointGUI()
+            video_capture.release()
             cv2.destroyAllWindows()
-            return p1,p2,p3,p4
+            return p1, p2, p3, p4
             break
 
+    video_capture.release()
     cv2.destroyAllWindows()
-
-
-

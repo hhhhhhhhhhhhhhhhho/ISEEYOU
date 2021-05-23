@@ -2,9 +2,9 @@ import pytesseract
 import cv2
 import numpy as np
 from Database import DBconnection as DB
-student_name="김찬규"
+
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
-video_capture = cv2.VideoCapture(0)
+
 
 x = 140
 x_e = 500
@@ -29,6 +29,7 @@ def general(frame):
     return textRec(th)
 
 def idcheck(exam_id, student_id, student_name):
+    video_capture = cv2.VideoCapture(0)
     check_success = False
     while check_success==False:
         if DB.load_accept_id_card(exam_id, student_id):
