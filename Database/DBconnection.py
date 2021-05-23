@@ -183,3 +183,8 @@ def load_from_aws_audio(path):
             sound.play()
             #pygame.time.delay(10000)
             running = False
+
+def update_accept_face_false(student_id, exam_id):
+    sql = "update EXAM_STUDENT set accept_face=false, accept_idcard=false where exam_id = %s and student_id = %s"
+    curs.execute(sql, (exam_id, student_id))
+    conn.commit()
