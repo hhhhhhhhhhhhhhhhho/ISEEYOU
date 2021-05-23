@@ -9,6 +9,7 @@ from datetime import datetime
 import cv2
 from Database import AccessKey as Key
 import pygame
+import wave
 
 # mysql 연결
 conn = pymysql.connect(
@@ -88,7 +89,7 @@ def upload_cheat_img(student_id, exam_id, img):
 #(5-2) 음성 s3에 저장
 def upload_cheat_voice(student_id, exam_id, audio):
     path = datetime.today().strftime("%Y-%m-%d") + '/' + str(exam_id) + '/' + str(student_id) + '/' + datetime.now().strftime("%m:%d-%H:%M:%S") + '.wav'
-    upload_to_aws(audio, 'iseeyou', path)
+    upload_audio_to_aws(audio, 'iseeyou', path)
 
 #(5-3) 로그 db 저장
 def store_cheat_log(exam_id, student_id, data, error_type, remarks):
@@ -156,12 +157,11 @@ def upload_image_to_aws(image, bucket, s3_file):
         print("Credentials not available")
         return False
 
-def upload_audio_to_aws(image, bucket, s3_file):
+def upload_audio_to_aws(audio, bucket, s3_file):
     s3 = boto3.client('s3', aws_access_key_id=Key.ACCESS_KEY,
                       aws_secret_access_key=Key.SECRET_KEY)
     try:
-        data = cv2.imencode('.jpg', image)[1].tobytes()
-        s3.upload_fileobj(io.BytesIO(data), bucket, s3_file)
+        s3.upload_file(audio, bucket, s3_file)
         print("Upload Successful")
         return True
     except FileNotFoundError:
@@ -207,4 +207,3 @@ def update_accept_face_false(student_id, exam_id):
     sql = "update EXAM_STUDENT set accept_face=false, accept_idcard=false where exam_id = %s and student_id = %s"
     curs.execute(sql, (exam_id, student_id))
     conn.commit()
-
