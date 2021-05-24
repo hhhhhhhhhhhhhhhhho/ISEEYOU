@@ -167,7 +167,7 @@ class MainWidget(QtWidgets.QWidget):
                 self.btn_facecheck.setEnabled(False)
                 self.setting['face_check'] = True
         except:
-            print("카메라확인")
+            CameraConnectError()
         if all(list(self.setting.values())):
             self.btn_start_test.setEnabled(True)
 
@@ -180,7 +180,7 @@ class MainWidget(QtWidgets.QWidget):
                 self.btn_idcardcheck.setEnabled(False)
                 self.setting['idcard_check'] = True
         except:
-            print("카메라확인")
+            CameraConnectError()
         if all(list(self.setting.values())):
             self.btn_start_test.setEnabled(True)
 
@@ -341,4 +341,11 @@ class LoginFaultMessage(QtWidgets.QMessageBox):
         super().__init__()
         self.setText('틀린 로그인정보: 학번을 다시 입력하세요.')
         self.setWindowTitle('로그인 실패')
+        self.exec()
+
+class CameraConnectError(QtWidgets.QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setText('1. 카메라 연결 상태 확인 \n2. 다른 프로그램에서 카메라 사용중인지 확인')
+        self.setWindowTitle('카메라 없음')
         self.exec()
