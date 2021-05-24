@@ -92,5 +92,7 @@ def face_check(exam_id, student_id, img):
             cv2.destroyAllWindows()
             return False
         if cv2.waitKey(1) & 0xFF == ord('q'):
+            video_capture.release()
+            cv2.destroyAllWindows()
             break
 

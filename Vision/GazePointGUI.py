@@ -69,78 +69,82 @@ def GazePointGUI():
         # This limits the while loop to a max of 10 times per second.
         # Leave this out and we will use all CPU we can.
         clock.tick(10)
-        ret, frame = video_capture.read()
-        gray = cv2.cvtColor(src=frame, code=cv2.COLOR_BGR2GRAY)
-        faces = detector(gray)
-        for face in faces:
-            landmarks = predictor(image=gray, box=face)
-            left_eye_x = []
-            left_eye_y = []
-            for n in range(36, 42):
-                x = landmarks.part(n).x
-                y = landmarks.part(n).y
-                left_eye_x.append(x)
-                left_eye_y.append(y)
-            left_max_x = max(left_eye_x)
-            left_min_x = min(left_eye_x)
-            left_max_y = max(left_eye_y)
-            left_min_y = min(left_eye_y)
-            left_lefttop = (left_min_x, left_min_y)
-            left_center = ((left_max_x + left_min_x) // 2, (left_max_y + left_min_y) // 2)
-            if not (left_center[0] <= 2 or left_center[1] <= 2):
-                cv2.circle(img=frame, center=left_center, radius=3, color=(0, 255, 0), thickness=-1)
-            right_eye_x = []
-            right_eye_y = []
-            for n in range(42, 48):
-                x = landmarks.part(n).x
-                y = landmarks.part(n).y
-                right_eye_x.append(x)
-                right_eye_y.append(y)
-            right_max_x = max(right_eye_x)
-            right_min_x = min(right_eye_x)
-            right_max_y = max(right_eye_y)
-            right_min_y = min(right_eye_y)
-            right_lefttop = (right_min_x, right_min_y)
-            right_center = ((right_max_x + right_min_x) // 2, (right_max_y + right_min_y) // 2)
-            if not (right_center[0] <= 2 or right_center[1] <= 2):
-                cv2.circle(img=frame, center=right_center, radius=3, color=(0, 255, 0), thickness=-1)
+        try:
+            ret, frame = video_capture.read()
+            gray = cv2.cvtColor(src=frame, code=cv2.COLOR_BGR2GRAY)
+            faces = detector(gray)
+            for face in faces:
+                landmarks = predictor(image=gray, box=face)
+                left_eye_x = []
+                left_eye_y = []
+                for n in range(36, 42):
+                    x = landmarks.part(n).x
+                    y = landmarks.part(n).y
+                    left_eye_x.append(x)
+                    left_eye_y.append(y)
+                left_max_x = max(left_eye_x)
+                left_min_x = min(left_eye_x)
+                left_max_y = max(left_eye_y)
+                left_min_y = min(left_eye_y)
+                left_lefttop = (left_min_x, left_min_y)
+                left_center = ((left_max_x + left_min_x) // 2, (left_max_y + left_min_y) // 2)
+                if not (left_center[0] <= 2 or left_center[1] <= 2):
+                    cv2.circle(img=frame, center=left_center, radius=3, color=(0, 255, 0), thickness=-1)
+                right_eye_x = []
+                right_eye_y = []
+                for n in range(42, 48):
+                    x = landmarks.part(n).x
+                    y = landmarks.part(n).y
+                    right_eye_x.append(x)
+                    right_eye_y.append(y)
+                right_max_x = max(right_eye_x)
+                right_min_x = min(right_eye_x)
+                right_max_y = max(right_eye_y)
+                right_min_y = min(right_eye_y)
+                right_lefttop = (right_min_x, right_min_y)
+                right_center = ((right_max_x + right_min_x) // 2, (right_max_y + right_min_y) // 2)
+                if not (right_center[0] <= 2 or right_center[1] <= 2):
+                    cv2.circle(img=frame, center=right_center, radius=3, color=(0, 255, 0), thickness=-1)
 
-            left_eye_im = frame[min(left_eye_y):max(left_eye_y), min(left_eye_x):max(left_eye_x), :].copy()
-            right_eye_im = frame[min(right_eye_y):max(right_eye_y), min(right_eye_x):max(right_eye_x), :]
-            T = 50
-            left_eye_thresholded_index = np.stack(((left_eye_im.sum(axis=2) // 3) < T).nonzero(), axis=1)
-            left_eye_cord = left_eye_thresholded_index.mean(axis=0, dtype=np.float16)
-            right_eye_thresholded_index = np.stack(((right_eye_im.sum(axis=2) // 3) < T).nonzero(), axis=1)
-            right_eye_cord = right_eye_thresholded_index.mean(axis=0, dtype=np.float16)
+                left_eye_im = frame[min(left_eye_y):max(left_eye_y), min(left_eye_x):max(left_eye_x), :].copy()
+                right_eye_im = frame[min(right_eye_y):max(right_eye_y), min(right_eye_x):max(right_eye_x), :]
+                T = 50
+                left_eye_thresholded_index = np.stack(((left_eye_im.sum(axis=2) // 3) < T).nonzero(), axis=1)
+                left_eye_cord = left_eye_thresholded_index.mean(axis=0, dtype=np.float16)
+                right_eye_thresholded_index = np.stack(((right_eye_im.sum(axis=2) // 3) < T).nonzero(), axis=1)
+                right_eye_cord = right_eye_thresholded_index.mean(axis=0, dtype=np.float16)
 
-            def add_tuple(a, b):
-                return (a[0] + b[1], a[1] + b[0])
+                def add_tuple(a, b):
+                    return (a[0] + b[1], a[1] + b[0])
 
-            if not np.isnan(left_eye_cord).any():
-                left_eye_cord_int = tuple(map(int, left_eye_cord))
-                memory_cord.pop()
-                memory_cord.append(add_tuple(left_lefttop, left_eye_cord_int))
-            if not np.isnan(right_eye_cord).any():
-                right_eye_cord_int = tuple(map(int, right_eye_cord))
-                memory_cord_right.pop()
-                memory_cord_right.append(add_tuple(right_lefttop, right_eye_cord_int))
+                if not np.isnan(left_eye_cord).any():
+                    left_eye_cord_int = tuple(map(int, left_eye_cord))
+                    memory_cord.pop()
+                    memory_cord.append(add_tuple(left_lefttop, left_eye_cord_int))
+                if not np.isnan(right_eye_cord).any():
+                    right_eye_cord_int = tuple(map(int, right_eye_cord))
+                    memory_cord_right.pop()
+                    memory_cord_right.append(add_tuple(right_lefttop, right_eye_cord_int))
 
-            if (memory_cord[-1][0] < left_min_x or memory_cord[-1][0] > left_max_x or memory_cord[-1][1] < left_min_y or
-                    memory_cord[-1][1] > left_max_y):
-                memory_cord[-1] = left_center
-            if (memory_cord_right[-1][0] < right_min_x or memory_cord_right[-1][0] > right_max_x or
-                    memory_cord_right[-1][1] < right_min_y or
-                    memory_cord_right[-1][1] > right_max_y):
-                memory_cord[-1] = left_center
+                if (memory_cord[-1][0] < left_min_x or memory_cord[-1][0] > left_max_x or memory_cord[-1][1] < left_min_y or
+                        memory_cord[-1][1] > left_max_y):
+                    memory_cord[-1] = left_center
+                if (memory_cord_right[-1][0] < right_min_x or memory_cord_right[-1][0] > right_max_x or
+                        memory_cord_right[-1][1] < right_min_y or
+                        memory_cord_right[-1][1] > right_max_y):
+                    memory_cord[-1] = left_center
 
 
-            # final output
-            # left_center # 완쪽 눈 중심 좌표
-            # right_center # 오른쪽 눈 중심 좌표
-            # memory_cord[-1] # 왼쪽 검은자 중심 좌표
-            # memory_cord_right[-1] # 오른쪽 검은자 중심 좌표
-            test_x = ((left_center[0] - memory_cord[-1][0]) + (right_center[0] - memory_cord_right[-1][0])) / 2
-            test_y = ((left_center[1] - memory_cord[-1][1]) + (right_center[1] - memory_cord_right[-1][1])) / 2
+                # final output
+                # left_center # 완쪽 눈 중심 좌표
+                # right_center # 오른쪽 눈 중심 좌표
+                # memory_cord[-1] # 왼쪽 검은자 중심 좌표
+                # memory_cord_right[-1] # 오른쪽 검은자 중심 좌표
+                test_x = ((left_center[0] - memory_cord[-1][0]) + (right_center[0] - memory_cord_right[-1][0])) / 2
+                test_y = ((left_center[1] - memory_cord[-1][1]) + (right_center[1] - memory_cord_right[-1][1])) / 2
+        except:
+            test_x =100
+            test_y =100
         for event in pygame.event.get():  # User did something
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:  # If user clicked close
                 done = True  # Flag that we are done so we exit this loop
@@ -186,9 +190,6 @@ def GazePointGUI():
                         flag = 4
                     elif flag == 4:
                         done = True
-
-
-
         # All drawing code happens after the for loop and but
         # inside the main while done==False loop.
 

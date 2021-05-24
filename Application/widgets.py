@@ -21,8 +21,8 @@ class MainWidget(QtWidgets.QWidget):
         self.login = Login()
         self.login.pushButton.clicked.connect(self.btn_login_clicked)
         self.login.id_input.returnPressed.connect(self.btn_login_clicked)
-
         self.login.show()
+        self.setting_count = 0
 
     def setup_ui(self):
         self.setObjectName("Form")
@@ -136,10 +136,11 @@ class MainWidget(QtWidgets.QWidget):
 
         #student_data[0] = 학생이름
         #student_data[1] = 학생사진
-        self.student_data = DB.load_studentdata(self.student_id)
-        print(self.student_data)
+        try:
+            self.student_data = DB.load_studentdata(self.student_id)
+        except:
+            print("학번 없음")
         self.sublist = DB.load_student_sublist(self.student_id)
-
         if self.sublist:
             print('로그인 성공')
             test_dial = SelectTest(self.sublist)
@@ -160,36 +161,47 @@ class MainWidget(QtWidgets.QWidget):
             LoginFaultMessage()
 
     def start_face_check(self):
-        if face_check.face_check(self.exam_code, self.student_id, self.student_data[1]):
-            self.lbl_facecheck_ok.show()
-            self.btn_facecheck.setEnabled(False)
-            self.setting['face_check'] = True
-
+        try:
+            if face_check.face_check(self.exam_code, self.student_id, self.student_data[1]):
+                self.lbl_facecheck_ok.show()
+                self.btn_facecheck.setEnabled(False)
+                self.setting['face_check'] = True
+        except:
+            CameraConnectError()
         if all(list(self.setting.values())):
             self.btn_start_test.setEnabled(True)
 
         print(self.setting)
 
     def start_idcard_check(self):
-        if text.idcheck(self.exam_code, self.student_id, self.student_data[0]):
-            self.lbl_idcardcheck_ok.show()
-            self.btn_idcardcheck.setEnabled(False)
-            self.setting['idcard_check'] = True
-
+        try:
+            if text.idcheck(self.exam_code, self.student_id, self.student_data[0]):
+                self.lbl_idcardcheck_ok.show()
+                self.btn_idcardcheck.setEnabled(False)
+                self.setting['idcard_check'] = True
+        except:
+            CameraConnectError()
         if all(list(self.setting.values())):
             self.btn_start_test.setEnabled(True)
 
         print(self.setting)
 
     def start_monitor_setting(self):
-        p1, p2, p3, p4 = point.bitOperation()
-
+        try:
+            p1, p2, p3, p4 = point.bitOperation()
+        except:
+            print("widget 예외처리")
+            self.setting_count+=1
+        print(p1,p2,p3,p4)
         # 화면세팅 함수
         # 세팅 완료하면 True 반환하게 하고, True 반환하면 밑에 있는 코드 실행되도록 if 조건문에서 함수 호출
-        if p1:
+        if max(abs(p1[0]),abs(p2[0]),abs(p3[0]),abs(p4[0])) < 10:
             self.lbl_monitor_setting_ok.show()
             self.btn_monitor_setting.setEnabled(False)
             self.setting['monitor_setting'] = True
+        else :
+            print("다시")
+            self.setting_count+=1
 
         if all(list(self.setting.values())):
             self.btn_start_test.setEnabled(True)
@@ -334,4 +346,11 @@ class LoginFaultMessage(QtWidgets.QMessageBox):
         super().__init__()
         self.setText('틀린 로그인정보: 학번을 다시 입력하세요.')
         self.setWindowTitle('로그인 실패')
+        self.exec()
+
+class CameraConnectError(QtWidgets.QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setText('1. 카메라 연결 상태 확인 \n2. 다른 프로그램에서 카메라 사용중인지 확인')
+        self.setWindowTitle('카메라 없음')
         self.exec()
