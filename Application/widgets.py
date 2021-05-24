@@ -187,17 +187,22 @@ class MainWidget(QtWidgets.QWidget):
         print(self.setting)
 
     def start_monitor_setting(self):
-        p1, p2, p3, p4 = point.bitOperation()
-
+        try:
+            p1, p2, p3, p4 = point.bitOperation()
+        except:
+            print("widget 예외처리")
+            self.setting_count+=1
+        print(p1,p2,p3,p4)
         # 화면세팅 함수
         # 세팅 완료하면 True 반환하게 하고, True 반환하면 밑에 있는 코드 실행되도록 if 조건문에서 함수 호출
-        if max(abs(p1),abs(p2),abs(p3),abs(p4)) < 10:
+        if max(abs(p1[0]),abs(p2[0]),abs(p3[0]),abs(p4[0])) < 10:
             self.lbl_monitor_setting_ok.show()
             self.btn_monitor_setting.setEnabled(False)
             self.setting['monitor_setting'] = True
         else :
             print("다시")
             self.setting_count+=1
+
         if all(list(self.setting.values())):
             self.btn_start_test.setEnabled(True)
 

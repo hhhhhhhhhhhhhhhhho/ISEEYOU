@@ -1,7 +1,8 @@
 import cv2
+import pygame
 from Vision import GazePointGUI
 
-
+ER_VALUE = (100,100)
 def bitOperation():
     vpos = 0
     hpos = 0
@@ -40,7 +41,13 @@ def bitOperation():
         cv2.imshow('positioning', student)
         cv2.moveWindow('positioning', x, y)
         if cv2.waitKey(1) == 13:
-            p1, p2, p3, p4 =GazePointGUI.GazePointGUI()
+            try:
+                p1, p2, p3, p4 =GazePointGUI.GazePointGUI()
+            except:
+                p1=p2=p3=p4=ER_VALUE
+                print("point예외처리")
+                GazePointGUI.video_capture.release()
+                pygame.quit()
             video_capture.release()
             cv2.destroyAllWindows()
             return p1, p2, p3, p4
