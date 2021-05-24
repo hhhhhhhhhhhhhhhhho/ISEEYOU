@@ -5,6 +5,10 @@ g.DS_Store
 
 Audio/audio_korean/.ipynb_checkpoints/
 Audio/audio_korean/audio_data/
+Audio/noise_recognition/db_connection.py
+Audio/noise_recognition/db_connection.py
+
+*.pyc
 Database/AccessKey.py
 Audio/noise_recognition/models/research/audioset/yamnet/db_connection.py
 .idea/

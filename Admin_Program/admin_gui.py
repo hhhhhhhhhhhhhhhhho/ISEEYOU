@@ -5,18 +5,16 @@ from PIL import Image, ImageTk
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from Database import DBconnection as DB
+from tkinter import messagebox
 
 
-def call_on_Exam():
-    window2 =on_Exam_()
-    window2.Load_cheating_Student()
-    window2.mainloop()
 
 
 
 class on_Exam_(Tk):
-    def __init__(self):
-        window.destroy()
+    def __init__(self,exam_id):
+        #Toplevel.destroy()
+        self.exam_id = exam_id
         Tk.__init__(self)
         self.geometry("700x400")
         self.title("시험 중 입니다.")
@@ -24,13 +22,13 @@ class on_Exam_(Tk):
         self.cheatingLog=Label(self,text=" 실시간 부정행위 로그")
         self.cheatingLogList = Listbox(self, selectmode='extend', height=20, width=80)
         self.cheatingLog.pack()
-        self.cheatingLogList.bind('<<ListboxSelect>>', self.Checking_cheatingInfo)
+        #self.cheatingLogList.bind('<<ListboxSelect>>', self.Checking_cheatingInfo)
         self.cheatingLogList.pack()
         self.selectBtn = Button(self, text="확인", command=self.Checking_cheatingInfo)
         self.selectBtn.pack(side='right', ipadx=20, padx=30)
 
     def Checking_cheatingInfo(self):
-        checking_window = Tk()
+        checking_window = Toplevel(self)
         checking_window.title("checking cheating")
         checking_window.resizable(True, True)
         checking_window.geometry("700x400")
@@ -75,9 +73,7 @@ class on_Exam_(Tk):
     def Load_cheating_Student(self):
         self.cheatingLogList.delete(0, Listbox.size((self.cheatingLogList)))
 
-        ### FIXME 쓰레드로 지속적으로 반복 해야 함.
-
-        query_cheating_Log = DB.load_cheat_log(1)
+        query_cheating_Log = DB.load_cheat_log(self.exam_id)
 
         for data in query_cheating_Log:
             student_id = data[0]
@@ -104,28 +100,12 @@ class on_Exam_(Tk):
 
 
 
-def manual_accept():
-    newWindow2 = Toplevel(window)
-    newWindow2.title("수동 인증 처리")
-    newWindow2.geometry("200x120")
-    manual_label = Label(newWindow2,text="학번을 입력하세요.")
-    manual_label.pack()
-    input_number = Text(newWindow2,height=5)
-    input_number.pack()
 
-    def manualy_accept_to_DB():
-        student_id =input_number.get("1.0","end")
-        DB.update_accept_check(student_id, 1)
-        window.Load_student()
-        newWindow2.destroy()
-
-
-    input_button = Button(newWindow2,text="확인",command=manualy_accept_to_DB)
-    input_button.pack()
 
 
 class Ready_For_Exam(Tk):
-    def __init__(self):
+    def __init__(self,exam_id):
+        self.examID=exam_id
         Tk.__init__(self)
         self.geometry("730x400")
         self.title("ISEEYOU 비대면 시험 감독관 / 학생 인증 화면")
@@ -153,20 +133,48 @@ class Ready_For_Exam(Tk):
         self.listbox_not_accept_face.grid(row=3, column=1)
         self.listbox_not_accept_idcard.grid(row=3, column=3)
 
-        self.start_button = Button(self, text="시험시작",command=call_on_Exam)  # command call other page
+        self.start_button = Button(self, text="시험시작",command=self.call_on_Exam)  # command call other page
         self.start_button.grid(row=4, column=3)
 
         self.reLoad_button = Button(self, text="새로고침", command=self.Load_student)
         self.reLoad_button.grid(row=4, column=2)
 
-        self.reLoad_button = Button(self, text="인증 완료", command=manual_accept)
+        self.reLoad_button = Button(self, text="인증 완료", command=self.manual_accept)
         self.reLoad_button.grid(row=4, column=1)
 
+    def call_on_Exam(self):
+        window2 = on_Exam_(self.examID)
+        window2.Load_cheating_Student()
+        window2.mainloop()
+
+    def manual_accept(self):
+        newWindow2 = Toplevel(self)
+        newWindow2.title("수동 인증 처리")
+        newWindow2.geometry("200x120")
+        manual_label = Label(newWindow2, text="학번을 입력하세요.")
+        manual_label.pack()
+        input_number = Text(newWindow2, height=5)
+        input_number.pack()
+
+        def manualy_accept_to_DB():
+            student_id = input_number.get("1.0", "end-1c")
+            DB.update_accept_check(student_id, self.examID)
+            self.Load_student()
+            ### FIXME ##########################################
+            #### FIXME 존재하지 않는 학번을 입력 할 경우 , except 처리 해야 함.
+            ### FIXME ##########################################
+            messagebox.showinfo(newWindow2,"수동 인증 완료")
+            newWindow2.destroy()
+
+
+        input_button = Button(newWindow2, text="확인", command=manualy_accept_to_DB)
+        input_button.pack()
+
     def Load_student(self):
-        query_accepted_face = DB.accept_face_true(1)
-        query_accepted_idcard = DB.accept_idcard_true(1)
-        query_not_accepted_face = DB.accept_face_false(1)
-        query_not_accepted_idcard = DB.accept_idcard_false(1)
+        query_accepted_face = DB.accept_face_true(self.examID)
+        query_accepted_idcard = DB.accept_idcard_true(self.examID)
+        query_not_accepted_face = DB.accept_face_false(self.examID)
+        query_not_accepted_idcard = DB.accept_idcard_false(self.examID)
 
         '''
         select S.name, S.id
@@ -213,14 +221,13 @@ class Ready_For_Exam(Tk):
         self.after(1000,self.Load_student)
         print("인증 정보 업데이트 완료")
 
+def Start_Exam_Process(exam_id):
+    window = Ready_For_Exam(exam_id)
+    window.Load_student()
+    window.mainloop()
 
-window = Ready_For_Exam()
-window.Load_student()
-window.mainloop()
-
-
-
-
+if __name__ == "__main__":
+    Start_Exam_Process(5)
 
 '''
 window.geometry("730x400")
