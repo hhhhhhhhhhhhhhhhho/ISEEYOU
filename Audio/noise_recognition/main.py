@@ -1,7 +1,6 @@
 from __future__ import division, print_function
 import recording_voice as rv
 from models.research.audioset.yamnet import inference as ym
-import db_connection as db
 import threading as thd
 
 '''
