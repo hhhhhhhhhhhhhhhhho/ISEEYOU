@@ -16,11 +16,11 @@ RED = (255, 0, 0)
 radius = 40
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+predictor = dlib.shape_predictor("Application/shape_predictor_68_face_landmarks.dat")
 cnt = 0
 memory_cord = [(0, 0)]
 memory_cord_right = [(0, 0)]
-video_capture = cv2.VideoCapture(0)
+#video_capture = cv2.VideoCapture(0)
 
 
 def writeText(screen, xp, yp):
@@ -40,7 +40,7 @@ def insideCircle(x_p, y_p, xp, yp):
     else:
         return False
 
-def GazePointGUI():
+def GazePointGUI(video_capture):
 
     # Initialize the game engine
     pygame.init()
@@ -65,6 +65,7 @@ def GazePointGUI():
     yp = user32.GetSystemMetrics(1)/2
     flag = 0
     widgets.PreviousEyeSetting()
+
     while not done:
 
         # This limits the while loop to a max of 10 times per second.

@@ -21,7 +21,7 @@ def bitOperation():
         ret, student = video_capture.read()
 
         student = cv2.resize(student, (width, height))
-        face_mask = cv2.imread('img/facemask.png')
+        face_mask = cv2.imread('Application/img/facemask.png')
 
         face_mask = cv2.resize(face_mask, (width, height))
 
@@ -47,12 +47,14 @@ def bitOperation():
         first_time = False
         if cv2.waitKey(1) == 13:
             try:
-                p1, p2, p3, p4 =GazePointGUI.GazePointGUI()
+                p1, p2, p3, p4 = GazePointGUI.GazePointGUI(video_capture)
             except:
                 p1=p2=p3=p4=ER_VALUE
                 print("point예외처리")
                 GazePointGUI.video_capture.release()
                 pygame.quit()
+
+            print('point allocation')
             video_capture.release()
             cv2.destroyAllWindows()
             return p1, p2, p3, p4

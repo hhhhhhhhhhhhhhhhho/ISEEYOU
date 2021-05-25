@@ -10,11 +10,12 @@ except:
     os.chdir(os.getcwd())
 
 def eyetracking(p1,p2,p3,p4):
+    print('eyetracking start')
     x_score = max(abs(p1[0]),abs(p2[0]),abs(p3[0]),abs(p4[0]))
     y_score = max(abs(p1[1]),abs(p2[1]),abs(p3[1]),abs(p4[1]))
     sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
     detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+    predictor = dlib.shape_predictor("Application/shape_predictor_68_face_landmarks.dat")
     cnt = 0
     memory_cord = [(0, 0)]
     memory_cord_right = [(0, 0)]
