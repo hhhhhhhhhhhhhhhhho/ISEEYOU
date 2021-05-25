@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import sys, os
 import dlib
+from Application import widgets
 
 # Define the colors we will use in RGB format
 BLACK = (0, 0, 0)
@@ -63,7 +64,7 @@ def GazePointGUI():
     xp = user32.GetSystemMetrics(0)/2
     yp = user32.GetSystemMetrics(1)/2
     flag = 0
-
+    widgets.PreviousEyeSetting()
     while not done:
 
         # This limits the while loop to a max of 10 times per second.

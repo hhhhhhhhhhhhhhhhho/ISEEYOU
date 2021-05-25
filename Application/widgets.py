@@ -188,9 +188,9 @@ class MainWidget(QtWidgets.QWidget):
 
     def start_monitor_setting(self):
         try:
+            PreviousMask()
             p1, p2, p3, p4 = point.bitOperation()
         except:
-            print("widget 예외처리")
             self.setting_count+=1
         print(p1,p2,p3,p4)
         # 화면세팅 함수
@@ -200,9 +200,12 @@ class MainWidget(QtWidgets.QWidget):
             self.btn_monitor_setting.setEnabled(False)
             self.setting['monitor_setting'] = True
         else :
-            print("다시")
+            EyeCannotFind()
             self.setting_count+=1
 
+        if self.setting_count>3:
+            self.btn_monitor_setting.setEnabled(False)
+            self.setting['monitor_setting'] = True
         if all(list(self.setting.values())):
             self.btn_start_test.setEnabled(True)
 
@@ -351,6 +354,27 @@ class LoginFaultMessage(QtWidgets.QMessageBox):
 class CameraConnectError(QtWidgets.QMessageBox):
     def __init__(self):
         super().__init__()
-        self.setText('1. 카메라 연결 상태 확인 \n2. 다른 프로그램에서 카메라 사용중인지 확인')
+        self.setText('1. 카메라 연결 상태를 확인하세요 \n2. 다른 프로그램에서 카메라 사용중인지 확인하세요')
         self.setWindowTitle('카메라 없음')
+        self.exec()
+
+class EyeCannotFind(QtWidgets.QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setText('1. 정면을 향해주세요 \n2. 공간이 너무 어두운지 확인하세요')
+        self.setWindowTitle('눈을 찾지 못했습니다')
+        self.exec()
+
+class PreviousEyeSetting(QtWidgets.QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setText('점을 정확히 응시한 후에 눌러주세요')
+        self.setWindowTitle('주의')
+        self.exec()
+
+class PreviousMask(QtWidgets.QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setText('화면, 카메라, 자세를 조정해서 편한 자세로 정면을 향해주세요')
+        self.setWindowTitle('알림')
         self.exec()
