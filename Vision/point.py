@@ -14,14 +14,13 @@ def bitOperation():
     x = 500
     y = 100
     first_time = True
-    str = "Align the position and press the 'Enter' button"
     video_capture = cv2.VideoCapture(0)
 
     while True:
         ret, student = video_capture.read()
 
         student = cv2.resize(student, (width, height))
-        face_mask = cv2.imread('img/facemask.png')
+        face_mask = cv2.imread('img/mask.png')
 
         face_mask = cv2.resize(face_mask, (width, height))
 
@@ -39,7 +38,6 @@ def bitOperation():
         dst = cv2.add(student_bg, face_mask_fg)
         student[vpos:rows + vpos, hpos:cols + hpos] = dst
 
-        cv2.putText(student, str, (40, 50), cv2.FONT_HERSHEY_COMPLEX, 0.9, (255, 255, 255), 2)
         cv2.imshow('positioning', student)
         cv2.moveWindow('positioning', x, y)
         if first_time==True:
