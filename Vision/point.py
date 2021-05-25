@@ -1,6 +1,7 @@
 import cv2
 import pygame
 from Vision import GazePointGUI
+from Application import widgets
 
 ER_VALUE = (100,100)
 def bitOperation():
@@ -12,12 +13,13 @@ def bitOperation():
 
     x = 500
     y = 100
-
+    first_time = True
     str = "Align the position and press the 'Enter' button"
     video_capture = cv2.VideoCapture(0)
 
     while True:
         ret, student = video_capture.read()
+
         student = cv2.resize(student, (width, height))
         face_mask = cv2.imread('img/facemask.png')
 
@@ -40,6 +42,9 @@ def bitOperation():
         cv2.putText(student, str, (40, 50), cv2.FONT_HERSHEY_COMPLEX, 0.9, (255, 255, 255), 2)
         cv2.imshow('positioning', student)
         cv2.moveWindow('positioning', x, y)
+        if first_time==True:
+            widgets.PreviousMask()
+        first_time = False
         if cv2.waitKey(1) == 13:
             try:
                 p1, p2, p3, p4 =GazePointGUI.GazePointGUI()
