@@ -379,3 +379,10 @@ class PreviousMask(QtWidgets.QMessageBox):
         self.setText('화면, 카메라, 자세를 조정해서 편한 자세로 정면을 향해주세요')
         self.setWindowTitle('알림')
         self.exec()
+
+class TimeLimit(QtWidgets.QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setText('시간초과. 다시 시도하세요')
+        self.setWindowTitle('알림')
+        self.exec()
