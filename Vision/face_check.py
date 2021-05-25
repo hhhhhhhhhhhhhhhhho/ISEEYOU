@@ -2,6 +2,7 @@ import face_recognition
 import cv2
 import numpy as np
 from Database import DBconnection as DB
+from Application import widgets
 
 
 def face_check(exam_id, student_id, img):
@@ -90,6 +91,7 @@ def face_check(exam_id, student_id, img):
         if cur_scd >= MAX_SCD:
             video_capture.release()
             cv2.destroyAllWindows()
+            widgets.TimeLimit()
             return False
         if cv2.waitKey(1) & 0xFF == ord('q'):
             video_capture.release()

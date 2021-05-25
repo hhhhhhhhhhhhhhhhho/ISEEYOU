@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import sys, os
 import dlib
+from Application import widgets
 
 # Define the colors we will use in RGB format
 BLACK = (0, 0, 0)
@@ -15,11 +16,11 @@ RED = (255, 0, 0)
 radius = 40
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+predictor = dlib.shape_predictor("Application/shape_predictor_68_face_landmarks.dat")
 cnt = 0
 memory_cord = [(0, 0)]
 memory_cord_right = [(0, 0)]
-video_capture = cv2.VideoCapture(0)
+#video_capture = cv2.VideoCapture(0)
 
 
 def writeText(screen, xp, yp):
@@ -39,7 +40,7 @@ def insideCircle(x_p, y_p, xp, yp):
     else:
         return False
 
-def GazePointGUI():
+def GazePointGUI(video_capture):
 
     # Initialize the game engine
     pygame.init()
@@ -63,6 +64,7 @@ def GazePointGUI():
     xp = user32.GetSystemMetrics(0)/2
     yp = user32.GetSystemMetrics(1)/2
     flag = 0
+    widgets.PreviousEyeSetting()
 
     while not done:
 
@@ -132,7 +134,9 @@ def GazePointGUI():
                 if (memory_cord_right[-1][0] < right_min_x or memory_cord_right[-1][0] > right_max_x or
                         memory_cord_right[-1][1] < right_min_y or
                         memory_cord_right[-1][1] > right_max_y):
-                    memory_cord[-1] = left_center
+                    memory_cord_right[-1] = right_center
+                cv2.circle(img=frame, center=memory_cord[-1], radius=2, color=(0, 0, 255), thickness=-1)
+                cv2.circle(img=frame, center=memory_cord_right[-1], radius=2, color=(0, 0, 255), thickness=-1)
 
 
                 # final output
@@ -169,26 +173,30 @@ def GazePointGUI():
                 mouse = pygame.mouse.get_pos()
                 if insideCircle(mouse[0], mouse[1], xp, yp):
                     if flag == 0:
-                        point1=(test_x,test_y)
                         xp = x_left
                         yp = y_top
                         flag = 1
                     elif flag == 1:
                         point2 = (test_x, test_y)
+                        frame_capture_2 = frame
                         xp = x_right
                         yp = y_top
                         flag = 2
                     elif flag == 2:
                         point3 = (test_x, test_y)
+                        frame_capture_3 = frame
                         xp = x_left
                         yp = y_bottom
                         flag = 3
                     elif flag == 3:
                         point4 = (test_x, test_y)
+                        frame_capture_4 = frame
                         xp = x_right
                         yp = y_bottom
                         flag = 4
                     elif flag == 4:
+                        point1 = (test_x, test_y)
+                        frame_capture_1 = frame
                         done = True
         # All drawing code happens after the for loop and but
         # inside the main while done==False loop.
@@ -210,4 +218,10 @@ def GazePointGUI():
 
     # Be IDLE friendly
     pygame.quit()
+
+    cv2.imshow('1', frame_capture_1)
+    cv2.imshow('2', frame_capture_2)
+    cv2.imshow('3', frame_capture_3)
+    cv2.imshow('4', frame_capture_4)
+    cv2.waitKey()
     return point1, point2, point3, point4

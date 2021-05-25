@@ -1,10 +1,14 @@
-import Application.webviewer
+import threading
+
 from PyQt5 import QtCore, QtWidgets, QtGui
-from Vision import face_check, text, point
-from Application import res, StyleSheet
+from Application import res, StyleSheet, webviewer
+from Audio.noise_recognition import main
+from Database import DBconnection as DB
+from Vision import face_check, text, point, eyetracking_module
+
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-from Database import DBconnection as DB
+
 
 
 class MainWidget(QtWidgets.QWidget):
@@ -45,7 +49,7 @@ class MainWidget(QtWidgets.QWidget):
 
         self.btn_start_test = QtWidgets.QPushButton(self)
         self.btn_start_test.clicked.connect(self.exam_start)
-        self.btn_start_test.setEnabled(False)
+        self.btn_start_test.setEnabled(True)
         self.btn_start_test.setGeometry(QtCore.QRect(60, 350, 511, 51))
 
         self.lbl_stdname = QtWidgets.QLabel(self)
@@ -140,6 +144,7 @@ class MainWidget(QtWidgets.QWidget):
             self.student_data = DB.load_studentdata(self.student_id)
         except:
             print("학번 없음")
+
         self.sublist = DB.load_student_sublist(self.student_id)
         if self.sublist:
             print('로그인 성공')
@@ -187,29 +192,45 @@ class MainWidget(QtWidgets.QWidget):
         print(self.setting)
 
     def start_monitor_setting(self):
+        cameraError = False
         try:
-            p1, p2, p3, p4 = point.bitOperation()
+            self.point = point.bitOperation()
         except:
-            print("widget 예외처리")
-            self.setting_count+=1
-        print(p1,p2,p3,p4)
+            CameraConnectError()
+            cameraError = True
         # 화면세팅 함수
         # 세팅 완료하면 True 반환하게 하고, True 반환하면 밑에 있는 코드 실행되도록 if 조건문에서 함수 호출
-        if max(abs(p1[0]),abs(p2[0]),abs(p3[0]),abs(p4[0])) < 10:
-            self.lbl_monitor_setting_ok.show()
-            self.btn_monitor_setting.setEnabled(False)
-            self.setting['monitor_setting'] = True
-        else :
-            print("다시")
-            self.setting_count+=1
+        print('monitor')
+        print(self.point)
+        if cameraError == False:
+            if max(abs(self.point[0][0]),abs(self.point[0][0]),abs(self.point[0][0]),abs(self.point[0][0])) < 10:
+                self.lbl_monitor_setting_ok.show()
+                self.btn_monitor_setting.setEnabled(False)
+                self.setting['monitor_setting'] = True
+            else :
+                EyeCannotFind()
+                self.setting_count+=1
+
+            if self.setting_count>3:
+                self.btn_monitor_setting.setEnabled(False)
+                self.setting['monitor_setting'] = True
 
         if all(list(self.setting.values())):
-            self.btn_start_test.setEnabled(True)
+            self.btn_start_test.setEnabled(False)
 
         print(self.setting)
 
     def exam_start(self):
-        Application.webviewer.ExamProcess()
+        noise_recognition_thread = threading.Thread(target=main.Run_Noise_Recognition,
+                                                    args=(self.student_id, self.exam_code))
+
+        eyetracking_thread = threading.Thread(target=eyetracking_module.eyetracking,
+                                              args=(self.point[0], self.point[1], self.point[2], self.point[3]))
+
+        noise_recognition_thread.start()
+        eyetracking_thread.start()
+
+        webviewer.ExamProcess()
 
 
 class Login(QtWidgets.QWidget):
@@ -351,6 +372,34 @@ class LoginFaultMessage(QtWidgets.QMessageBox):
 class CameraConnectError(QtWidgets.QMessageBox):
     def __init__(self):
         super().__init__()
-        self.setText('1. 카메라 연결 상태 확인 \n2. 다른 프로그램에서 카메라 사용중인지 확인')
+        self.setText('1. 카메라 연결 상태를 확인하세요 \n2. 다른 프로그램에서 카메라 사용중인지 확인하세요')
         self.setWindowTitle('카메라 없음')
+        self.exec()
+
+class EyeCannotFind(QtWidgets.QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setText('1. 정면을 향해주세요 \n2. 공간이 너무 어두운지 확인하세요')
+        self.setWindowTitle('눈을 찾지 못했습니다')
+        self.exec()
+
+class PreviousEyeSetting(QtWidgets.QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setText('점을 정확히 응시한 후에 눌러주세요')
+        self.setWindowTitle('주의')
+        self.exec()
+
+class PreviousMask(QtWidgets.QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setText('화면, 카메라, 자세를 조정해서 편한 자세로 정면을 향해주세요')
+        self.setWindowTitle('알림')
+        self.exec()
+
+class TimeLimit(QtWidgets.QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setText('시간초과. 다시 시도하세요')
+        self.setWindowTitle('알림')
         self.exec()

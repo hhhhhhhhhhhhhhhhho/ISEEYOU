@@ -25,16 +25,13 @@ conn = pymysql.connect(
 # curs = conn.cursor(pymysql.cursors.DictCursor)
 curs = conn.cursor()
 
-
-
-#1. 학번으로 학생사진 가져오기
+#1. 학번으로 학생이름, 사진 가져오기
 def load_studentdata(student_id):
     sql = "select S.name, I.file from IMAGE I inner join STUDENT S on S.id = I.student_id where I.student_id = %s"
     curs.execute(sql, student_id)
     conn.commit()
     data = curs.fetchall()
     student_image = load_from_aws_image(data[0][1])
-    #cv2.imshow('student_img', student_image)
     student_data = [data[0][0], student_image]
     return student_data
 
@@ -82,14 +79,16 @@ def update_accept_check(student_id, exam_id):
 
 #5. 부정행위 로그 저장
 #(5-1) 이미지 s3에 저장
-def upload_cheat_img(student_id, exam_id, img):
-    path = datetime.today().strftime("%Y-%m-%d") + '/' + str(exam_id) + '/' + str(student_id) + '/' + datetime.now().strftime("%m:%d-%H:%M:%S") + '.jpg'
+def upload_cheat_img(student_id, exam_id, img, error_type, remarks):
+    path = 'Cheat Log/' + datetime.today().strftime("%Y-%m-%d") + '/' + str(exam_id) + '/' + str(student_id) + '/' + datetime.now().strftime("%m:%d-%H:%M:%S") + '.jpg'
     upload_image_to_aws(img, 'iseeyou', path)
+    store_cheat_log(exam_id, student_id, path, error_type, remarks)
 
 #(5-2) 음성 s3에 저장
-def upload_cheat_voice(student_id, exam_id, audio):
-    path = datetime.today().strftime("%Y-%m-%d") + '/' + str(exam_id) + '/' + str(student_id) + '/' + datetime.now().strftime("%m:%d-%H:%M:%S") + '.wav'
+def upload_cheat_voice(student_id, exam_id, audio, error_type, remarks):
+    path = 'Cheat Log/' + datetime.today().strftime("%Y-%m-%d") + '/' + str(exam_id) + '/' + str(student_id) + '/' + datetime.now().strftime("%m:%d-%H:%M:%S") + '.wav'
     upload_audio_to_aws(audio, 'iseeyou', path)
+    store_cheat_log(exam_id, student_id, path, error_type, remarks)
 
 #(5-3) 로그 db 저장
 def store_cheat_log(exam_id, student_id, data, error_type, remarks):
@@ -141,7 +140,6 @@ def load_cheat_log(exam_id):
     return curs.fetchall()
 
 
-
 def upload_image_to_aws(image, bucket, s3_file):
     s3 = boto3.client('s3', aws_access_key_id=Key.ACCESS_KEY,
                       aws_secret_access_key=Key.SECRET_KEY)
@@ -176,7 +174,7 @@ def load_from_aws_image(path):
                       aws_secret_access_key=Key.SECRET_KEY)
     obj = s3.Object('iseeyou', path)
     body = obj.get()['Body'].read()
-    print(body)
+
     encoded = np.array(list(body), dtype = np.uint8)
     imageBGR = cv2.imdecode(encoded, cv2.IMREAD_COLOR)
     imageRGB = cv2.cvtColor(imageBGR, cv2.COLOR_BGR2RGB)
@@ -189,7 +187,6 @@ def load_from_aws_audio(path):
                       aws_secret_access_key=Key.SECRET_KEY)
     obj = s3.Object('iseeyou', path)
     audio = obj.get()['Body'].read()
-    #winsound.PlaySound(audio, winsound.SND_MEMORY)
 
     pygame.mixer.pre_init(frequency=16000, size=-16, channels=1)
     pygame.init()

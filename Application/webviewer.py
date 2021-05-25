@@ -28,6 +28,7 @@ class ExamProcess():
 
         print(self.window.value)
         window_thread = threading.Thread(target=self.check_window)
+        window_thread.daemon = True
         window_thread.start()
 
     def check_window(self):
