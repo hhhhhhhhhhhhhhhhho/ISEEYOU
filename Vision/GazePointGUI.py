@@ -134,7 +134,7 @@ def GazePointGUI(video_capture):
                 if (memory_cord_right[-1][0] < right_min_x or memory_cord_right[-1][0] > right_max_x or
                         memory_cord_right[-1][1] < right_min_y or
                         memory_cord_right[-1][1] > right_max_y):
-                    memory_cord[-1] = left_center
+                    memory_cord_right[-1] = right_center
                 cv2.circle(img=frame, center=memory_cord[-1], radius=2, color=(0, 0, 255), thickness=-1)
                 cv2.circle(img=frame, center=memory_cord_right[-1], radius=2, color=(0, 0, 255), thickness=-1)
 
