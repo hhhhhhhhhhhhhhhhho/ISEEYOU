@@ -1,7 +1,7 @@
 from __future__ import division, print_function
-import recording_voice as rv
-from models.research.audioset.yamnet import inference as ym
-import db_connection as db
+from Audio.noise_recognition import recording_voice as rv
+from Audio.noise_recognition.models.research.audioset.yamnet import inference as ym
+
 import threading as thd
 
 '''
@@ -24,12 +24,13 @@ def voice_cheating_recognition():
 '''
 
 def Run_Noise_Recognition(studentID , examID):
+    print('run noise_rcog')
 
-
-    record_thread = thd.Thread(target=rv.Recording_Sound())
+    record_thread = thd.Thread(target=rv.Recording_Sound)
     record_thread.daemon = True
 
-    classification_thread = thd.Thread(target=ym.speech_classification('recorded_voice/file2.wav', studentID, examID))
+    classification_thread = thd.Thread(target=ym.speech_classification,
+                                       args=('Audio/noise_recognition/recorded_voice/file2.wav', studentID, examID))
     classification_thread.daemon = True
 
     rv.Checking_mic()
@@ -40,8 +41,4 @@ def Run_Noise_Recognition(studentID , examID):
 
     while True:
         rv.Recording_Sound()
-        ym.speech_classification('recorded_voice/file2.wav', studentID, examID)
-
-
-if __name__ == "__main__":
-    Run_Noise_Recognition(18011529, 1)
+        ym.speech_classification('Audio/noise_recognition/recorded_voice/file2.wav', studentID, examID)

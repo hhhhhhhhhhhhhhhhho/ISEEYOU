@@ -1,10 +1,14 @@
-import Application.webviewer
+import threading
+
 from PyQt5 import QtCore, QtWidgets, QtGui
-from Vision import face_check, text, point
-from Application import res, StyleSheet
+from Application import res, StyleSheet, webviewer
+from Audio.noise_recognition import main
+from Database import DBconnection as DB
+from Vision import face_check, text, point, eyetracking_module
+
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-from Database import DBconnection as DB
+
 
 
 class MainWidget(QtWidgets.QWidget):
@@ -45,7 +49,7 @@ class MainWidget(QtWidgets.QWidget):
 
         self.btn_start_test = QtWidgets.QPushButton(self)
         self.btn_start_test.clicked.connect(self.exam_start)
-        self.btn_start_test.setEnabled(False)
+        self.btn_start_test.setEnabled(True)
         self.btn_start_test.setGeometry(QtCore.QRect(60, 350, 511, 51))
 
         self.lbl_stdname = QtWidgets.QLabel(self)
@@ -140,6 +144,7 @@ class MainWidget(QtWidgets.QWidget):
             self.student_data = DB.load_studentdata(self.student_id)
         except:
             print("학번 없음")
+
         self.sublist = DB.load_student_sublist(self.student_id)
         if self.sublist:
             print('로그인 성공')
@@ -189,14 +194,16 @@ class MainWidget(QtWidgets.QWidget):
     def start_monitor_setting(self):
         cameraError = False
         try:
-            p1, p2, p3, p4 = point.bitOperation()
+            self.point = point.bitOperation()
         except:
             CameraConnectError()
             cameraError = True
         # 화면세팅 함수
         # 세팅 완료하면 True 반환하게 하고, True 반환하면 밑에 있는 코드 실행되도록 if 조건문에서 함수 호출
+        print('monitor')
+        print(self.point)
         if cameraError == False:
-            if max(abs(p1[0]),abs(p2[0]),abs(p3[0]),abs(p4[0])) < 10:
+            if max(abs(self.point[0][0]),abs(self.point[0][0]),abs(self.point[0][0]),abs(self.point[0][0])) < 10:
                 self.lbl_monitor_setting_ok.show()
                 self.btn_monitor_setting.setEnabled(False)
                 self.setting['monitor_setting'] = True
@@ -207,13 +214,23 @@ class MainWidget(QtWidgets.QWidget):
             if self.setting_count>3:
                 self.btn_monitor_setting.setEnabled(False)
                 self.setting['monitor_setting'] = True
+
         if all(list(self.setting.values())):
-            self.btn_start_test.setEnabled(True)
+            self.btn_start_test.setEnabled(False)
 
         print(self.setting)
 
     def exam_start(self):
-        Application.webviewer.ExamProcess()
+        noise_recognition_thread = threading.Thread(target=main.Run_Noise_Recognition,
+                                                    args=(self.student_id, self.exam_code))
+
+        eyetracking_thread = threading.Thread(target=eyetracking_module.eyetracking,
+                                              args=(self.point[0], self.point[1], self.point[2], self.point[3]))
+
+        noise_recognition_thread.start()
+        eyetracking_thread.start()
+
+        webviewer.ExamProcess()
 
 
 class Login(QtWidgets.QWidget):

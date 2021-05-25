@@ -20,7 +20,7 @@ def Recording_Sound():
     RATE = 16000
     CHUNK = 1024
     RECORD_SECONDS = 10
-    WAVE_OUTPUT_FILENAME = "recorded_voice/file2.wav"
+    WAVE_OUTPUT_FILENAME = "Audio/noise_recognition/recorded_voice/file2.wav"
 
     audio = pyaudio.PyAudio()
 
