@@ -135,6 +135,8 @@ def GazePointGUI(video_capture):
                         memory_cord_right[-1][1] < right_min_y or
                         memory_cord_right[-1][1] > right_max_y):
                     memory_cord[-1] = left_center
+                cv2.circle(img=frame, center=memory_cord[-1], radius=2, color=(0, 0, 255), thickness=-1)
+                cv2.circle(img=frame, center=memory_cord_right[-1], radius=2, color=(0, 0, 255), thickness=-1)
 
 
                 # final output
@@ -171,26 +173,30 @@ def GazePointGUI(video_capture):
                 mouse = pygame.mouse.get_pos()
                 if insideCircle(mouse[0], mouse[1], xp, yp):
                     if flag == 0:
-                        point1=(test_x,test_y)
                         xp = x_left
                         yp = y_top
                         flag = 1
                     elif flag == 1:
                         point2 = (test_x, test_y)
+                        frame_capture_2 = frame
                         xp = x_right
                         yp = y_top
                         flag = 2
                     elif flag == 2:
                         point3 = (test_x, test_y)
+                        frame_capture_3 = frame
                         xp = x_left
                         yp = y_bottom
                         flag = 3
                     elif flag == 3:
                         point4 = (test_x, test_y)
+                        frame_capture_4 = frame
                         xp = x_right
                         yp = y_bottom
                         flag = 4
                     elif flag == 4:
+                        point1 = (test_x, test_y)
+                        frame_capture_1 = frame
                         done = True
         # All drawing code happens after the for loop and but
         # inside the main while done==False loop.
@@ -212,4 +218,10 @@ def GazePointGUI(video_capture):
 
     # Be IDLE friendly
     pygame.quit()
+
+    cv2.imshow('1', frame_capture_1)
+    cv2.imshow('2', frame_capture_2)
+    cv2.imshow('3', frame_capture_3)
+    cv2.imshow('4', frame_capture_4)
+    cv2.waitKey()
     return point1, point2, point3, point4
