@@ -211,17 +211,8 @@ def GazePointGUI(video_capture):
         # Go ahead and update the screen with what we've drawn.
         # This MUST happen after all the other drawing commands.
         pygame.display.flip()
-    print(point1)
-    print(point2)
-    print(point3)
-    print(point4)
 
     # Be IDLE friendly
     pygame.quit()
 
-    cv2.imshow('1', frame_capture_1)
-    cv2.imshow('2', frame_capture_2)
-    cv2.imshow('3', frame_capture_3)
-    cv2.imshow('4', frame_capture_4)
-    cv2.waitKey()
     return point1, point2, point3, point4

@@ -49,11 +49,9 @@ def bitOperation():
                 p1, p2, p3, p4 = GazePointGUI.GazePointGUI(video_capture)
             except:
                 p1=p2=p3=p4=ER_VALUE
-                print("point예외처리")
                 GazePointGUI.video_capture.release()
                 pygame.quit()
 
-            print('point allocation')
             video_capture.release()
             cv2.destroyAllWindows()
             return p1, p2, p3, p4

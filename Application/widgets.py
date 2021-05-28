@@ -131,12 +131,7 @@ class MainWidget(QtWidgets.QWidget):
         QtCore.QCoreApplication.instance().quit()
 
     def btn_login_clicked(self):
-        # db로 학번 전달, 학번 검사 후 로그인, 사용자의 시험 과목 목록 받아옴.
-
-        # 로그인 성공 => 시험 선택 dialog 띄움 || 로그인 실패(db에 해당학번 없음) => 실패 dialog 띄울 예정
-        print('login btn clicked!')
         self.student_id = self.login.id_input.text()
-        print(self.student_id, '로그인 시도..')
 
         #student_data[0] = 학생이름
         #student_data[1] = 학생사진
@@ -147,22 +142,15 @@ class MainWidget(QtWidgets.QWidget):
 
         self.sublist = DB.load_student_sublist(self.student_id)
         if self.sublist:
-            print('로그인 성공')
             test_dial = SelectTest(self.sublist)
 
             if test_dial.exec():
-                print('시험 선택 완료')
-                print('test index =', MainWidget.test_index)
                 self.exam_code = self.sublist[MainWidget.test_index][0]
-                print('exam_code=', self.exam_code)
                 DB.update_accept_face_false(self.exam_code, self.student_id)
                 self.login.close()
                 self.setup_ui()
                 self.show()
-            else:
-                print('시험 선택 실패')
         else:
-            print('로그인 실패.. 다시 시도바람')
             LoginFaultMessage()
 
     def start_face_check(self):
@@ -176,7 +164,6 @@ class MainWidget(QtWidgets.QWidget):
         if all(list(self.setting.values())):
             self.btn_start_test.setEnabled(True)
 
-        print(self.setting)
 
     def start_idcard_check(self):
         try:
@@ -189,7 +176,6 @@ class MainWidget(QtWidgets.QWidget):
         if all(list(self.setting.values())):
             self.btn_start_test.setEnabled(True)
 
-        print(self.setting)
 
     def start_monitor_setting(self):
         cameraError = False
@@ -200,8 +186,6 @@ class MainWidget(QtWidgets.QWidget):
             cameraError = True
         # 화면세팅 함수
         # 세팅 완료하면 True 반환하게 하고, True 반환하면 밑에 있는 코드 실행되도록 if 조건문에서 함수 호출
-        print('monitor')
-        print(self.point)
         if cameraError == False:
             if max(abs(self.point[0][0]),abs(self.point[0][0]),abs(self.point[0][0]),abs(self.point[0][0])) < 10:
                 self.lbl_monitor_setting_ok.show()
@@ -216,9 +200,7 @@ class MainWidget(QtWidgets.QWidget):
                 self.setting['monitor_setting'] = True
 
         if all(list(self.setting.values())):
-            self.btn_start_test.setEnabled(False)
-
-        print(self.setting)
+            self.btn_start_test.setEnabled(True)
 
     def exam_start(self):
         noise_recognition_thread = threading.Thread(target=main.Run_Noise_Recognition,
@@ -308,8 +290,6 @@ class SelectTest(QtWidgets.QDialog):
         super().__init__()
 
         self.sublist = subjects
-        print(self.sublist)
-
         self.setup_ui()
 
     def setup_ui(self):

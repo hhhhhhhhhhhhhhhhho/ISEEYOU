@@ -39,7 +39,6 @@ def idcheck(exam_id, student_id, student_name):
         stname=general(cropImage(x, x_e, y, y_e, frame))
         cv2.imshow('Video', frame)
         if(stname.find(student_name)>0):
-            print("확인되었습니다")
             check_success = True
             break
         if cv2.waitKey(1) & 0xFF == ord('q'):
