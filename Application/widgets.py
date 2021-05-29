@@ -5,6 +5,7 @@ from Application import res, StyleSheet, webviewer
 from Audio.noise_recognition import main
 from Database import DBconnection as DB
 from Vision import face_check, text, point, eyetracking_module
+from tkinter import Tk
 
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
@@ -203,6 +204,8 @@ class MainWidget(QtWidgets.QWidget):
             self.btn_start_test.setEnabled(True)
 
     def exam_start(self):
+        self.clear_clipboard()
+
         noise_recognition_thread = threading.Thread(target=main.Run_Noise_Recognition,
                                                     args=(self.student_id, self.exam_code))
 
@@ -213,6 +216,16 @@ class MainWidget(QtWidgets.QWidget):
         eyetracking_thread.start()
 
         webviewer.ExamProcess()
+
+    def clear_clipboard(self):
+        try:
+            data = Tk().clipboard_get()
+        except:
+            data = None
+
+        Tk().clipboard_clear()
+
+        # data db에 전송
 
 
 class Login(QtWidgets.QWidget):
