@@ -2,6 +2,9 @@ import ctypes
 import threading
 import webview
 from time import sleep
+from PIL import ImageGrab
+from Database import DBconnection as DB
+import numpy
 
 class ExamProcess():
 
@@ -9,6 +12,8 @@ class ExamProcess():
     def __init__(self):
         super().__init__()
         self.start_exam()
+        self.student_id = 0
+        self.exam_code = 0
 
 
     def start_exam(self):
@@ -45,6 +50,9 @@ class ExamProcess():
                 prev = buffer.value
                 print(buffer.value)
                 print("부정행위")
+                img = ImageGrab.grab()
+                imgsend = numpy.array(img)
+                DB.store_cheat_log(self.exam_code, self.student_id, imgsend, 4, '부정 프로그램 활성화')
 
 #
 #

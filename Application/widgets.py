@@ -207,13 +207,14 @@ class MainWidget(QtWidgets.QWidget):
                                                     args=(self.student_id, self.exam_code))
 
         eyetracking_thread = threading.Thread(target=eyetracking_module.eyetracking,
-                                              args=(self.point[0], self.point[1], self.point[2], self.point[3]))
+                                              args=(self.exam_code, self.student_id, self.point[0], self.point[1], self.point[2], self.point[3]))
 
         noise_recognition_thread.start()
         eyetracking_thread.start()
 
-        webviewer.ExamProcess()
-
+        web = webviewer.ExamProcess()
+        web.student_id = self.student_id
+        web.exam_code = self.exam_code
 
 class Login(QtWidgets.QWidget):
     def __init__(self):
