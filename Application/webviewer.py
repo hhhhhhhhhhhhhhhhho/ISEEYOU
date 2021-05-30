@@ -5,15 +5,17 @@ from time import sleep
 from PIL import ImageGrab
 from Database import DBconnection as DB
 import numpy
+import cv2
 
 class ExamProcess():
 
     window_title = 'Exam Screen'
-    def __init__(self):
+
+    def __init__(self, student_id, exam_code):
         super().__init__()
+        self.student_id = student_id
+        self.exam_code = exam_code
         self.start_exam()
-        self.student_id = 0
-        self.exam_code = 0
 
 
     def start_exam(self):
@@ -52,9 +54,8 @@ class ExamProcess():
                 print("부정행위")
                 img = ImageGrab.grab()
                 imgsend = numpy.array(img)
-                DB.store_cheat_log(self.exam_code, self.student_id, imgsend, 4, '부정 프로그램 활성화')
+                imageRGB = cv2.cvtColor(imgsend, cv2.COLOR_BGR2RGB)
+                DB.upload_cheat_img(self.student_id, self.exam_code, imageRGB, 4, '부정 프로그램 활성화')
 
 #
-#
-if __name__ == '__main__':
-    process = ExamProcess()
+

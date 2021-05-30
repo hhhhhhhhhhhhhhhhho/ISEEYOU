@@ -112,7 +112,7 @@ def eyetracking(exam_id, student_id, p1,p2,p3,p4):
                     print("부정행위가 감지되었습니다.", testcnt)
                     testcnt += 1
                     cnt = 0
-                    DB.store_cheat_log(exam_id, student_id, frame, 2, '시선추적')
+                    DB.upload_cheat_img(student_id, exam_id, frame, 2, '시선추적')
 
         cv2.imshow('Video', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):

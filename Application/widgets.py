@@ -215,9 +215,7 @@ class MainWidget(QtWidgets.QWidget):
         noise_recognition_thread.start()
         eyetracking_thread.start()
 
-        web = webviewer.ExamProcess()
-        web.student_id = self.student_id
-        web.exam_code = self.exam_code
+        webviewer.ExamProcess(self.student_id, self.exam_code)
 
     def clear_clipboard(self):
         try:
