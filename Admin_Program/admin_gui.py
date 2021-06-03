@@ -20,8 +20,11 @@ class on_Exam_(Tk):
         self.title("시험 중 입니다.")
         self.resizable(True,True)
         self.cheatingLog=Label(self,text=" 실시간 부정행위 로그")
-        self.cheatingLogList = Listbox(self, selectmode='extend', height=20, width=80)
+        self.scrollbar = Scrollbar(self)
+        self.scrollbar.pack(side="right", fill="y")
+        self.cheatingLogList = Listbox(self, yscrollcommand = self.scrollbar.set,selectmode='extend', height=20, width=80)
         self.cheatingLog.pack()
+        self.scrollbar.config(command=self.cheatingLogList.yview)
         #self.cheatingLogList.bind('<<ListboxSelect>>', self.Checking_cheatingInfo)
         self.cheatingLogList.pack()
         self.selectBtn = Button(self, text="확인", command=self.Checking_cheatingInfo)
@@ -93,10 +96,10 @@ class on_Exam_(Tk):
 
             ### FIXME Cheating Code 별로 음성 , 시선추적 , 화면전환 텍스트로 바꿔주기
 
-            self.cheatingLogList.insert(END, input_data)
+            self.cheatingLogList.insert(0, input_data)
 
         print("불러오기 성공")
-        self.after(5000, self.Load_cheating_Student)
+        self.after(10000, self.Load_cheating_Student)
 
 
 
