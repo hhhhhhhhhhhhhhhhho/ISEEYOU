@@ -2,15 +2,14 @@ import cv2
 import numpy as np
 import sys, os
 import dlib
-
+from Database import DBconnection as DB
 try:
     os.chdir(sys._MEIPASS)
     print(sys._MEIPASS)
 except:
     os.chdir(os.getcwd())
 
-def eyetracking(p1,p2,p3,p4):
-    print('eyetracking start')
+def eyetracking(exam_id, student_id, p1,p2,p3,p4):
     x_score = max(abs(p1[0]),abs(p2[0]),abs(p3[0]),abs(p4[0]))
     y_score = max(abs(p1[1]),abs(p2[1]),abs(p3[1]),abs(p4[1]))
     sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
@@ -113,6 +112,8 @@ def eyetracking(p1,p2,p3,p4):
                     print("부정행위가 감지되었습니다.", testcnt)
                     testcnt += 1
                     cnt = 0
+                    DB.upload_cheat_img(student_id, exam_id, frame, 2, '시선추적')
+
         cv2.imshow('Video', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
