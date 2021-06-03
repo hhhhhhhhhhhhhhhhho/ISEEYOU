@@ -13,7 +13,6 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 
 class MainWidget(QtWidgets.QWidget):
-    timeover = False
     test_index = -1
 
     def __init__(self):
@@ -50,7 +49,7 @@ class MainWidget(QtWidgets.QWidget):
 
         self.btn_start_test = QtWidgets.QPushButton(self)
         self.btn_start_test.clicked.connect(self.exam_start)
-        self.btn_start_test.setEnabled(True)
+        self.btn_start_test.setEnabled(False)
         self.btn_start_test.setGeometry(QtCore.QRect(60, 350, 511, 51))
 
         self.lbl_stdname = QtWidgets.QLabel(self)
