@@ -57,5 +57,4 @@ class ExamProcess():
                 imageRGB = cv2.cvtColor(imgsend, cv2.COLOR_BGR2RGB)
                 DB.upload_cheat_img(self.student_id, self.exam_code, imageRGB, 4, '부정 프로그램 활성화')
 
-#
 

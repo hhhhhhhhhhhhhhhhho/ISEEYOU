@@ -147,7 +147,7 @@ class MainWidget(QtWidgets.QWidget):
 
             if test_dial.exec():
                 self.exam_code = self.sublist[MainWidget.test_index][0]
-                DB.update_accept_face_false(self.exam_code, self.student_id)
+                DB.update_accept_false(self.exam_code, self.student_id)
                 self.login.close()
                 self.setup_ui()
                 self.show()
@@ -157,6 +157,7 @@ class MainWidget(QtWidgets.QWidget):
     def start_face_check(self):
         try:
             if face_check.face_check(self.exam_code, self.student_id, self.student_data[1]):
+                DB.update_accept_face_check(self.student_id, self.exam_code)
                 self.lbl_facecheck_ok.show()
                 self.btn_facecheck.setEnabled(False)
                 self.setting['face_check'] = True
@@ -172,6 +173,7 @@ class MainWidget(QtWidgets.QWidget):
                 self.lbl_idcardcheck_ok.show()
                 self.btn_idcardcheck.setEnabled(False)
                 self.setting['idcard_check'] = True
+                DB.update_accept_idcard_check(self.student_id, self.exam_code)
         except:
             CameraConnectError()
         if all(list(self.setting.values())):
