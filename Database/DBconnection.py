@@ -204,3 +204,18 @@ def update_accept_face_false(student_id, exam_id):
     sql = "update EXAM_STUDENT set accept_face=false, accept_idcard=false where exam_id = %s and student_id = %s"
     curs.execute(sql, (exam_id, student_id))
     conn.commit()
+
+def update_accept_face_check(student_id, exam_id):
+    sql = "update EXAM_STUDENT set accept_face=true where exam_id = %s and student_id = %s"
+    curs.execute(sql, (exam_id, student_id))
+    conn.commit()
+
+def update_accept_idcard_check(student_id, exam_id):
+    sql = "update EXAM_STUDENT set accept_idcard=true where exam_id = %s and student_id = %s"
+    curs.execute(sql, (exam_id, student_id))
+    conn.commit()
+
+def update_accept_false(student_id, exam_id):
+    sql = "update EXAM_STUDENT set accept_face=false, accept_idcard=false where exam_id = %s and student_id = %s"
+    curs.execute(sql, (exam_id, student_id))
+    conn.commit()
