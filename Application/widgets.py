@@ -1,5 +1,6 @@
 import threading
 
+import cv2
 from PyQt5 import QtCore, QtWidgets, QtGui
 from Application import res, StyleSheet, webviewer
 from Audio.noise_recognition import main
@@ -11,8 +12,8 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 
-
 class MainWidget(QtWidgets.QWidget):
+    timeover = False
     test_index = -1
 
     def __init__(self):
@@ -22,7 +23,6 @@ class MainWidget(QtWidgets.QWidget):
             'idcard_check': False,
             'monitor_setting': False
         }
-
         self.login = Login()
         self.login.pushButton.clicked.connect(self.btn_login_clicked)
         self.login.id_input.returnPressed.connect(self.btn_login_clicked)
@@ -207,25 +207,31 @@ class MainWidget(QtWidgets.QWidget):
 
     def exam_start(self):
         self.clear_clipboard()
-
+        timeover = [False]
         noise_recognition_thread = threading.Thread(target=main.Run_Noise_Recognition,
                                                     args=(self.student_id, self.exam_code))
 
         eyetracking_thread = threading.Thread(target=eyetracking_module.eyetracking,
-                                              args=(self.exam_code, self.student_id, self.point[0], self.point[1], self.point[2], self.point[3]))
+                                              args=(timeover, self.exam_code, self.student_id, self.point[0], self.point[1], self.point[2], self.point[3]))
 
         noise_recognition_thread.start()
         eyetracking_thread.start()
 
         webviewer.ExamProcess(self.student_id, self.exam_code)
+        timeover[0] = True
+        eyetracking_thread.join()
+        QtCore.QCoreApplication.instance().quit()
 
     def clear_clipboard(self):
         try:
             data = Tk().clipboard_get()
+            DB.store_clipboard(self.student_id, self.exam_code, data)
         except:
             data = None
 
         Tk().clipboard_clear()
+
+
 
         # data db에 전송
 
