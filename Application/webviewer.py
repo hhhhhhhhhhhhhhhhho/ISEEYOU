@@ -8,7 +8,6 @@ import numpy
 import cv2
 
 class ExamProcess():
-
     window_title = 'Exam Screen'
 
     def __init__(self, student_id, exam_code):
@@ -21,7 +20,7 @@ class ExamProcess():
     def start_exam(self):
         screen = webview.create_window(self.window_title, 'https://blackboard.sejong.ac.kr/')
         webview.start(self.toggle_fullscreen, screen)
-
+        print('webview start')
 
     def toggle_fullscreen(self, screen):
         screen.toggle_fullscreen()
@@ -34,11 +33,12 @@ class ExamProcess():
         lib.GetWindowTextW(handle, self.window, ctypes.sizeof(self.window))  # 버퍼에 타이틀 저장
 
         print(self.window.value)
-        window_thread = threading.Thread(target=self.check_window)
+        window_thread = threading.Thread(target=self.check_window, args=(screen,))
         window_thread.daemon = True
         window_thread.start()
 
-    def check_window(self):
+
+    def check_window(self,  screen):
         global prev
         prev = ''
         while(True):
@@ -56,6 +56,10 @@ class ExamProcess():
                 imgsend = numpy.array(img)
                 imageRGB = cv2.cvtColor(imgsend, cv2.COLOR_BGR2RGB)
                 DB.upload_cheat_img(self.student_id, self.exam_code, imageRGB, 4, '부정 프로그램 활성화')
+
+            sleep(5)
+            screen.destroy()
+            return
 
 #
 
