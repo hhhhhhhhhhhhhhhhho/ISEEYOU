@@ -1,5 +1,5 @@
 import threading
-
+from tkinter import *
 import cv2
 from PyQt5 import QtCore, QtWidgets, QtGui
 from Application import res, StyleSheet, webviewer
@@ -27,6 +27,30 @@ class MainWidget(QtWidgets.QWidget):
         self.login.id_input.returnPressed.connect(self.btn_login_clicked)
         self.login.show()
         self.setting_count = 0
+
+    def systemQuit(self):
+        os._exit(1)
+
+    def createQuitButton(self):
+        window = Tk()
+        window.overrideredirect(True)
+
+        w = 100
+        h = 30
+
+        ws = window.winfo_screenwidth()
+        hs = window.winfo_screenheight()
+
+        x = ws - w
+        y = 0
+
+        window.geometry('%dx%d+%d+%d' % (w, h, x, y))
+
+        window.wm_attributes("-topmost", 1)
+
+        b1 = Button(window, text="시험종료", width=w, height=h, command=self.systemQuit)
+        b1.pack(side=LEFT)
+        window.mainloop()
 
     def setup_ui(self):
         self.setObjectName("Form")
@@ -146,7 +170,7 @@ class MainWidget(QtWidgets.QWidget):
 
             if test_dial.exec():
                 self.exam_code = self.sublist[MainWidget.test_index][0]
-                DB.update_accept_false(self.exam_code, self.student_id)
+                DB.update_accept_false(self.student_id, self.exam_code)
                 self.login.close()
                 self.setup_ui()
                 self.show()
@@ -207,12 +231,17 @@ class MainWidget(QtWidgets.QWidget):
     def exam_start(self):
         self.clear_clipboard()
         timeover = [False]
+
+        button_thread = threading.Thread(target=self.createQuitButton)
+        button_thread.daemon = True
+        button_thread.start()
+
         noise_recognition_thread = threading.Thread(target=main.Run_Noise_Recognition,
                                                     args=(self.student_id, self.exam_code))
-
+        noise_recognition_thread.daemon = True
         eyetracking_thread = threading.Thread(target=eyetracking_module.eyetracking,
                                               args=(timeover, self.exam_code, self.student_id, self.point[0], self.point[1], self.point[2], self.point[3]))
-
+        eyetracking_thread.daemon = True
         noise_recognition_thread.start()
         eyetracking_thread.start()
 

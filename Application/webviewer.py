@@ -48,7 +48,7 @@ class ExamProcess():
             buffer = ctypes.create_unicode_buffer(255)  # 타이틀을 저장할 버퍼
             lib.GetWindowTextW(handle, buffer, ctypes.sizeof(buffer))  # 버퍼에 타이틀 저장
 
-            if buffer.value!='' and buffer.value!= prev and self.window.value != buffer.value:
+            if buffer.value!='' and buffer.value!='tk' and buffer.value!= prev and self.window.value != buffer.value:
                 prev = buffer.value
                 print(buffer.value)
                 print("부정행위")
