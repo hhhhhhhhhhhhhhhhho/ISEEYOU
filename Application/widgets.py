@@ -140,7 +140,7 @@ class MainWidget(QtWidgets.QWidget):
         self.lbl_stdname.setText(_translate("Form", f"응시자 : {self.student_data[0]}"))
 
         sub = self.sublist[MainWidget.test_index]
-        self.lbl_examtime_info.setText(_translate("Form", f"시험 시간: {sub[2].hour}:{sub[2].minute} ~ {sub[3].hour}:{sub[3].minute}"))
+        self.lbl_examtime_info.setText(_translate("Form", f"시험 시간: {sub[2].hour:02d}:{sub[2].minute:02d} ~ {sub[3].hour:02d}:{sub[3].minute:02d}"))
         self.lbl_stdinfo_icon.setText(_translate("Form", "<html><head/><body><p><img src=\":/student/driving-license.png\"/></p></body></html>"))
         self.lbl_clock_icon.setText(_translate("Form", "<html><head/><body><p><img src=\":/student/clock.png\"/></p></body></html>"))
         self.btn_exit.setText(_translate("Form", "X"))
