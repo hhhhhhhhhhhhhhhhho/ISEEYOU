@@ -108,9 +108,9 @@ def GazePointGUI(video_capture):
                 if not (right_center[0] <= 2 or right_center[1] <= 2):
                     cv2.circle(img=frame, center=right_center, radius=3, color=(0, 255, 0), thickness=-1)
 
-                left_eye_im = frame[min(left_eye_y):max(left_eye_y), min(left_eye_x):max(left_eye_x), :].copy()
-                right_eye_im = frame[min(right_eye_y):max(right_eye_y), min(right_eye_x):max(right_eye_x), :]
-                T = 50
+                left_eye_im = frame[min(left_eye_y):max(left_eye_y), min(left_eye_x):max(left_eye_x)].copy()
+                right_eye_im = frame[min(right_eye_y):max(right_eye_y), min(right_eye_x):max(right_eye_x)]
+                T = 100
                 left_eye_thresholded_index = np.stack(((left_eye_im.sum(axis=2) // 3) < T).nonzero(), axis=1)
                 left_eye_cord = left_eye_thresholded_index.mean(axis=0, dtype=np.float16)
                 right_eye_thresholded_index = np.stack(((right_eye_im.sum(axis=2) // 3) < T).nonzero(), axis=1)
