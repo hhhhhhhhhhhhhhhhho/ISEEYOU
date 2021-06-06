@@ -61,9 +61,9 @@ def eyetracking(timeover, exam_id, student_id, p1,p2,p3,p4):
             if not (right_center[0] <= 2 or right_center[1] <= 2):
                 cv2.circle(img=frame, center=right_center, radius=3, color=(0, 255, 0), thickness=-1)
 
-            left_eye_im = frame[min(left_eye_y):max(left_eye_y), min(left_eye_x):max(left_eye_x), :].copy()
-            right_eye_im = frame[min(right_eye_y):max(right_eye_y), min(right_eye_x):max(right_eye_x), :]
-            T = 50
+            left_eye_im = frame[min(left_eye_y):max(left_eye_y), min(left_eye_x):max(left_eye_x)].copy()
+            right_eye_im = frame[min(right_eye_y):max(right_eye_y), min(right_eye_x):max(right_eye_x)]
+            T = 100
             left_eye_thresholded_index = np.stack(((left_eye_im.sum(axis=2) // 3) < T).nonzero(), axis=1)
             left_eye_cord = left_eye_thresholded_index.mean(axis=0, dtype=np.float16)
             right_eye_thresholded_index = np.stack(((right_eye_im.sum(axis=2) // 3) < T).nonzero(), axis=1)
@@ -106,14 +106,14 @@ def eyetracking(timeover, exam_id, student_id, p1,p2,p3,p4):
                 testxx = np.delete(testxx, 0)
             if (len(testyy) >= 4):
                 testyy = np.delete(testyy, 0)
-            if abs(testxx.mean() - 1) > x_score or abs(testyy.mean() - 1) > y_score:
+            if abs(testxx.mean() - 1) > x_score+4 or abs(testyy.mean() - 1) > y_score+4:
 
                 cnt = cnt + 1
                 if (cnt == 10):
                     print("부정행위가 감지되었습니다.", testcnt)
                     testcnt += 1
                     cnt = 0
-                    DB.upload_cheat_img(student_id, exam_id, frame, 2, '시선추적')
+                    #DB.upload_cheat_img(student_id, exam_id, frame, 2, '시선추적')
 
         cv2.imshow('Video', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -122,4 +122,4 @@ def eyetracking(timeover, exam_id, student_id, p1,p2,p3,p4):
     cv2.destroyAllWindows()
 
 
-#eyetracking(1, 17011477, (10,10), (10,10), (10,10), (10,10))
+eyetracking(1,1, 17011477, (10,10), (10,10), (10,10), (10,10))

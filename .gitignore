@@ -18,3 +18,4 @@ Application/__pycache__/
 
 */.ipynb_checkpoints/
 */audio_data/
+Audio/noise_recognition/models
