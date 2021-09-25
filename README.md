@@ -1,6 +1,6 @@
 # 2021 세종 창의학기제 프로젝트 비대면 시험 감독관 ISEEYOU
 
-<![screenshot](./img/final_thumbnail.png)
+<![screenshot](./img/Final_thumbnail.png)
 
 출처: https://ndb796.tistory.com/557 [안경잡이개발자]
 
